@@ -15,6 +15,8 @@ Dépôt : [github.com/bienvenu531/Site-Educatif](https://github.com/bienvenu531/
 ## Fonctionnalités
 
 - **Parcours** par niveau (primaire, collège, lycée, université) et par matière, avec progression.
+- **Catalogue pré-rendu** : les 19 cours et 12 documents sont présents dans le HTML (lecture sans
+  JavaScript, indexation), puis enrichis par les filtres et le suivi côté navigateur.
 - **Cours** complets : objectifs, sections rédigées, encadrés, exemples, tableaux, quiz corrigé et
   expliqué.
 - **Bibliothèque** de documents (fiches, méthodes, formulaires, protocoles, cartes mentales,
@@ -33,7 +35,8 @@ philosophie, économie, langues).
 
 ## Stack et principes
 
-- **HTML + CSS + JavaScript vanilla**, aucun framework, aucune dépendance, **aucun build**.
+- **HTML + CSS + JavaScript vanilla**, aucun framework, aucune dépendance, **aucun build** côté
+  serveur. Le catalogue est pré-rendu en HTML par un script Node avant déploiement.
 - Aucun CDN tiers, aucune police ni image distante : le site fonctionne hors ligne et en `file://`.
 - Persistance via `localStorage` (clé `sepshaness.v1`), export/import JSON.
 - Design system centralisé dans `assets/css/base.css` (jetons, composants, thème sombre), décrit
@@ -66,10 +69,11 @@ navigateur.
 | Commande | Rôle |
 |---|---|
 | `npm start` | serveur de développement local |
-| `npm test` / `npm run check` | contrôle complet du projet (structure, liens, versions, JS, données, Store, pages légales) |
+| `npm test` / `npm run check` | pré-rendu à jour + contrôle complet (structure, liens, versions, JS, données, Store, pages légales, SEO) |
 | `npm run qa` | contrôle navigateur (Chrome/CDP) : desktop 1440, mobile 390/360, erreurs console, captures dans `docs/apercus/` |
+| `npm run prerendre` | régénère le catalogue statique dans `cours.html` et `bibliotheque.html` |
 | `npm run versionner` | recalcule les paramètres `?v=` des assets dans les pages HTML |
-| `npm run avant-mise-en-ligne` | `versionner` puis `check` : à lancer avant chaque déploiement |
+| `npm run avant-mise-en-ligne` | pré-rendu, versionnement puis contrôle complet : à lancer avant chaque déploiement |
 | `npm run verifier:prod` | vérifie le site en ligne (pages, 404, sécurité, cache CDN, fraîcheur des assets) |
 
 `npm run qa` nécessite Chrome et un serveur lancé (`npm start`). Le chemin de Chrome peut être
@@ -100,10 +104,12 @@ surchargé avec `CHROME_PATH`, l'adresse avec `BASE_URL`.
 ├─ docs/
 │  ├─ CONTRAT.md             contrat technique : design system, données, API
 │  ├─ DEPLOIEMENT.md         procédure Hostinger, purge du cache, recette, retour arrière
+│  ├─ AUDIT.md               audit complet : mesures, constats, priorités
 │  └─ apercus/               captures de contrôle
 └─ tools/
    ├─ check.mjs              contrôle automatique
    ├─ qa.mjs                 contrôle navigateur
+   ├─ prerendre.mjs          catalogue statique dans cours.html et bibliotheque.html
    ├─ versionner.mjs         versionnement des assets
    ├─ verifier-prod.mjs      vérification du site en ligne
    └─ preparer-zip.ps1       archive prête à téléverser
@@ -129,16 +135,18 @@ Le schéma exact est décrit dans [docs/CONTRAT.md](docs/CONTRAT.md) (§6). Apr�
 npm run avant-mise-en-ligne
 ```
 
-Puis suivez [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md). Les fichiers `assets/` doivent être envoyés
-avec leur nouvelle version `?v=`, sans quoi le CDN continuerait de servir l'ancienne.
+Puis suivez [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md). `npm run avant-mise-en-ligne` régénère
+aussi le catalogue statique (`cours.html`, `bibliotheque.html`) et les versions `?v=` ; les fichiers
+`assets/` doivent être envoyés avec leur nouvelle version, sans quoi le CDN continuerait de servir
+l'ancienne.
 
 ---
 
 ## Qualité
 
-- `npm test` vérifie la structure des pages, les liens et ressources, la syntaxe des 18 fichiers JS,
-  l'intégrité du catalogue (19 cours, 12 documents, 76 questions), le rendu Markdown, l'API du
-  `Store` et la conformité des pages légales.
+- `npm test` vérifie le pré-rendu, la structure des pages, les liens et ressources, la syntaxe des
+  18 fichiers JS, l'intégrité du catalogue (19 cours, 12 documents, 76 questions), le rendu
+  Markdown, l'API du `Store`, le SEO et la conformité des pages légales.
 - `npm run qa` mesure les débordements horizontaux, collecte les erreurs console et teste les
   interactions principales (filtres, lecteur, quiz, espace de travail, profil).
 - `npm run verifier:prod` contrôle le site réellement servi : en-têtes, redirections, 404, sitemap

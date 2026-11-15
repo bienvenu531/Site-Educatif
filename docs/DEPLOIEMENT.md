@@ -1,12 +1,14 @@
 # Déploiement — SepsHaness sur Hostinger
 
 Ce document décrit la mise en ligne de **bienvenueduc.com** (hébergement Hostinger, Apache/LiteSpeed)
-et la vérification qui suit. Le site est **100 % statique** : il n'y a ni build, ni base de données,
-ni PHP. Déployer revient à copier des fichiers dans `public_html/`.
+et la vérification qui suit. Le site est **100 % statique** : il n'y a ni build au runtime, ni base de
+données, ni PHP. Le catalogue est pré-rendu par un script Node avant déploiement, et le HTML généré
+est commité. Déployer revient à publier des fichiers dans `public_html/`.
 
-> **Règle d'or :** toute modification d'un fichier `assets/` doit être suivie de
-> `npm run versionner` avant l'envoi. Les pages référencent `assets/…?v=<empreinte>` : sans cette
-> étape, les navigateurs et le CDN continueront de servir l'ancienne version pendant des semaines.
+> **Règle d'or :** toute modification d'un fichier `assets/` ou des données pédagogiques doit être
+> suivie de `npm run avant-mise-en-ligne` avant l'envoi. Les pages référencent
+> `assets/…?v=<empreinte>` et le catalogue est pré-rendu : sans cette étape, navigateurs, CDN et
+> robots continueraient de voir l'ancienne version.
 
 ---
 
@@ -18,9 +20,10 @@ npm run avant-mise-en-ligne
 
 Cette commande :
 
-1. met à jour les paramètres `?v=` des pages HTML (`tools/versionner.mjs`) ;
-2. lance le contrôle complet (`tools/check.mjs`) : structure, liens, versions, syntaxe JS, données,
-   `Store`, pages légales.
+1. régénère le catalogue statique de `cours.html` et `bibliotheque.html` (`tools/prerendre.mjs`) ;
+2. met à jour les paramètres `?v=` des pages HTML (`tools/versionner.mjs`) ;
+3. lance le contrôle complet (`tools/check.mjs`) : structure, liens, versions, pré-rendu, syntaxe JS,
+   données, `Store`, pages légales, SEO.
 
 Attendu : `Résultat : SUCCÈS`. En cas d'échec, ne pas déployer.
 
@@ -53,7 +56,7 @@ Un ZIP prêt à téléverser peut être généré à tout moment :
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/preparer-zip.ps1
 ```
 
-Il produit `dist/site-a-televerser.zip` (39 entrées, environ 180 Ko), avec les chemins en `/`,
+Il produit `dist/site-a-televerser.zip` (39 entrées, environ 185 Ko), avec les chemins en `/`,
 le `.htaccess` inclus et sans `tools/`, `docs/`, `server.mjs`, `package.json` ni `README.md`.
 Le script vérifie lui-même la présence du `.htaccess` et du dossier `assets/`.
 
@@ -92,7 +95,7 @@ Le dépôt est relié au **déploiement automatique Hostinger** : un push sur `m
 du dépôt sur le site. Vérifié le 15 novembre 2026 : le commit `41c071d` a été publié à 19:36, avec
 les pages légales, la 404, `robots.txt`, `sitemap.xml` et le `.htaccess`.
 
-1. `npm run avant-mise-en-ligne` (versionner + contrôler) ;
+1. `npm run avant-mise-en-ligne` (pré-rendu + versionnement + contrôle) ;
 2. `git add -A`, `git commit`, `git push origin main` ;
 3. attendre la fin du déploiement (1 à 2 minutes), puis `npm run verifier:prod` ;
 4. purger le cache Hostinger si le vérificateur signale une ancienne version.
@@ -190,9 +193,9 @@ Aucune donnée utilisateur n'est concernée : tout est local au navigateur du vi
 
 | Situation | Action |
 |---|---|
-| Modification d'un cours ou d'un document (`assets/js/data/*.js`) | `npm run avant-mise-en-ligne`, envoyer le fichier, purger le cache |
+| Modification d'un cours ou d'un document (`assets/js/data/*.js`) | `npm run avant-mise-en-ligne` (le catalogue pré-rendu est régénéré), envoyer, purger le cache |
 | Modification de `app.js`, `store.js`, CSS | idem : le `?v=` change, les navigateurs prennent la nouvelle version |
-| Modification d'une page HTML | envoyer la page ; elle est en `no-cache`, aucun `?v=` à gérer |
+| Modification d'une page HTML | envoyer la page ; elle est en `no-cache`. Pour `cours.html` ou `bibliotheque.html`, passer par `npm run prerendre` |
 | Ajout d'une page | l'ajouter aussi à `sitemap.xml` et, si publique, vérifier `robots.txt` |
 
 Le numéro de version des assets n'est jamais saisi à la main : il est calculé à partir du contenu.

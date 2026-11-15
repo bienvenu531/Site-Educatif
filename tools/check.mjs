@@ -347,6 +347,28 @@ for (const motif of ["ErrorDocument 404 /404.html", "Strict-Transport-Security",
 if (HTACCESS.includes("ErrorDocument 404 /404.html")) ok.push(".htaccess : page 404, HTTPS et en-têtes configurés");
 
 /* -------------------------------------------------------------------------
+   1 quater. Pré-rendu des catalogues
+   ------------------------------------------------------------------------- */
+for (const [fichier, motif, attendu, libelle] of [
+  ["cours.html", /class="carte-cours"/g, 19, "cours"],
+  ["bibliotheque.html", /data-doc="/g, 12, "documents"]
+]) {
+  if (!existe(fichier)) continue;
+  const html = lire(fichier);
+  if (!html.includes("<!-- prerendu:debut -->") || !html.includes("<!-- prerendu:fin -->")) {
+    erreur(`${fichier} : marqueurs de pré-rendu absents (lancer npm run prerendre)`);
+    continue;
+  }
+  const nombre = (html.match(motif) || []).length;
+  if (nombre !== attendu) {
+    erreur(`${fichier} : ${nombre} ${libelle} pré-rendu(s), ${attendu} attendu(s) (lancer npm run prerendre)`);
+  }
+}
+if (!erreurs.some((message) => message.includes("pré-rendu"))) {
+  ok.push("Catalogue pré-rendu : 19 cours et 12 documents présents dans le HTML");
+}
+
+/* -------------------------------------------------------------------------
    2. Syntaxe JavaScript
    ------------------------------------------------------------------------- */
 const fichiersJs = fichiers("assets/js", [".js"]).sort();

@@ -22,6 +22,8 @@ et les étudiants (université). Fonctionnalités :
 Le site est **100 % statique**, sans dépendance externe, sans build, sans CDN : HTML + CSS + JavaScript
 vanilla, données en fichiers JS, persistance en `localStorage`. Il doit fonctionner en ouvrant
 `index.html` (`file://`) **et** via le petit serveur `node server.mjs`.
+Un pré-rendu optionnel (`tools/prerendre.mjs`) écrit le catalogue dans le HTML avant déploiement ;
+il ne change rien au fonctionnement ni à l'absence de build au runtime.
 
 ## 2. Arborescence et propriétaires
 
@@ -74,6 +76,7 @@ Espace sepsHaness/
 └─ tools/ (vérifications)           LEAD
    ├─ check.mjs
    ├─ qa.mjs
+   ├─ prerendre.mjs
    ├─ versionner.mjs
    ├─ verifier-prod.mjs
    └─ preparer-zip.ps1
@@ -81,6 +84,10 @@ Espace sepsHaness/
 
 **Chacun n'écrit que ses fichiers.** Ne jamais modifier un fichier d'un autre propriétaire, ni
 `base.css`, `app.js`, `store.js`, `markdown.js`, `data.js`, `data/core.js`, `index.html`.
+
+**Pré-rendu :** les blocs entre `<!-- prerendu:debut -->` et `<!-- prerendu:fin -->` de `cours.html`
+et `bibliotheque.html` sont générés par `tools/prerendre.mjs`. Ne pas les modifier à la main :
+modifier les données puis lancer `npm run prerendre`.
 
 ## 3. Conventions de code
 

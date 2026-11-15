@@ -3,7 +3,8 @@
 **Date :** 15 novembre 2026
 **Périmètre :** dépôt local, site en production, rendu navigateur, SEO, accessibilité, performance,
 sécurité, déploiement.
-**Version auditée :** commit `41c071d`, déployé automatiquement le 15 novembre 2026 à 19:36.
+**Version auditée :** site publié automatiquement le 15 novembre 2026, après les passes
+« qualité/déploiement » puis « contraste/pré-rendu ».
 
 ---
 
@@ -11,20 +12,18 @@ sécurité, déploiement.
 
 Le projet est **cohérent et fonctionnel** : les 12 pages se chargent sans erreur JavaScript, aucun
 débordement horizontal n'est mesuré de 360 à 1440 px, les 9 parcours interactifs testés fonctionnent,
-et le contrôle automatisé passe **29/29**. En production, la recette passe **24/24** depuis le
+et le contrôle automatisé passe **30/30**. En production, la recette passe **24/24** depuis le
 déploiement automatique du 15 novembre 2026 à 19:36.
 
-Deux points restent ouverts :
-
-1. **Le contraste du texte secondaire** en thème clair : `--c-texte-faible` (#79839a) atteint
-   **3,52:1** sur le fond et **3,80:1** sur les cartes, sous le seuil WCAG AA de 4,5:1.
-2. **Le SEO du catalogue** : les cours, documents et leçons sont rendus par JavaScript. Les pages
-   HTML ne contiennent que la coquille, ce qui limite l'indexation du contenu.
+Un point structurant reste ouvert : **le SEO des leçons**. Le catalogue est désormais **pré-rendu**
+(19 cours et 12 documents dans le HTML, vérifiés sans JavaScript), mais `lecon.html` et
+`parcours.html` restent rendus par JavaScript.
 
 Le reste est propre : contenu vérifié (19 cours, 12 documents, 76 questions), aucun lien cassé,
-thème sombre opérationnel, fonctionnement en `file://`, pages légales complètes et liens de pied de
-page sur toutes les pages. La mise en ligne (pages légales, 404, `robots.txt`, `sitemap.xml`,
-`.htaccess`, assets versionnés) est **faite**.
+**contraste corrigé** (`--c-texte-faible` #5f6a80, 5,04:1 minimum), thème sombre opérationnel,
+fonctionnement en `file://`, pages légales complètes et liens de pied de page sur toutes les pages.
+La mise en ligne (pages légales, 404, `robots.txt`, `sitemap.xml`, `.htaccess`, assets versionnés)
+est **faite**.
 
 ---
 
@@ -32,7 +31,8 @@ page sur toutes les pages. La mise en ligne (pages légales, 404, `robots.txt`, 
 
 | Contrôle | Outil | Résultat |
 |---|---|---|
-| Structure, liens, versions, syntaxe, données, `Store`, SEO | `npm test` (`tools/check.mjs`) | **29 réussites, 0 erreur** |
+| Structure, liens, versions, syntaxe, données, `Store`, SEO | `npm test` | **30 réussites, 0 erreur** |
+| Pré-rendu du catalogue | `node tools/prerendre.mjs --verifier` | **19 cours et 12 documents à jour** |
 | Rendu navigateur, responsive, erreurs console, interactions | `npm run qa` (`tools/qa.mjs`, Chrome/CDP) | **36 mesures, 0 problème ; 9/9 interactions** |
 | Accessibilité DOM (IDs, labels, boutons, liens) | audit CDP ad hoc | **0 anomalie** |
 | Thème sombre des pages autonomes | audit CDP ad hoc | **fonctionnel** |
@@ -60,9 +60,9 @@ test de charge ni de test d'intrusion. Les mesures sont faites dans Chrome sur W
   assets versionnés (`?v=…`) : la contrainte du contrat est respectée.
 - Les pages légales et la 404 ont été ajoutées au contrôle navigateur.
 
-### 3.2 Accessibilité — un écart de contraste
+### 3.2 Accessibilité — conforme
 
-Conforme :
+Contrôles :
 
 - un seul `<h1>` par page, hiérarchie de titres, `lang="fr"` ;
 - lien d'évitement, focus visible, navigation clavier ;
@@ -71,55 +71,57 @@ Conforme :
 - `prefers-reduced-motion` géré dans `base.css` ;
 - tableaux légaux avec `<th scope="col">` et en-têtes explicites.
 
-Écart :
+Contrastes (thème clair) :
 
 | Jeton | Usage | Contraste | Seuil | Verdict |
 |---|---|---|---|---|
-| `--c-texte-faible` #79839a | métadonnées, `.micro`, pied de page | **3,52:1** (fond) / **3,80:1** (carte) | 4,5:1 | **À corriger** |
+| `--c-texte-faible` #5f6a80 | métadonnées, `.micro`, pied de page | **5,04:1** (fond) / **5,44:1** (carte) | 4,5:1 | conforme |
 | `--c-texte-doux` #4a5468 | texte courant secondaire | 7,61:1 | 4,5:1 | conforme |
 | `--c-texte` #13182a | texte principal | 16,33:1 | 4,5:1 | conforme |
 | `--c-sur-primaire` sur `--c-primaire` | boutons primaires | 6,04:1 | 4,5:1 | conforme |
 
 Tous les jetons du **thème sombre** passent (minimum 5,04:1).
 
-**Correction proposée :** remplacer `--c-texte-faible: #79839a` par **`#5f6a80`**
-(5,04:1 sur le fond, 5,44:1 sur les cartes) dans `assets/css/base.css`. Ce changement touche le
-design system : il doit être validé visuellement, puis les captures `docs/apercus/` régénérées.
+La valeur `--c-texte-faible` a été corrigée le 15 novembre 2026 (#79839a → **#5f6a80**) et les
+captures `docs/apercus/` ont été régénérées.
 
-### 3.3 SEO — socle en place, contenu dépendant de JavaScript
+### 3.3 SEO — catalogue pré-rendu, leçons encore dynamiques
 
 En place :
 
 - titres et descriptions **uniques** sur les 12 pages, canonical sur 11 pages (la page `lecon.html`
   est volontairement exclue : son contenu dépend de `?cours=`) ;
+- **catalogue pré-rendu** : `cours.html` contient dans son HTML les 19 cartes (titre, résumé, lien
+  vers la leçon) et `bibliotheque.html` les 12 documents (titre, description, lien) ; vérifié avec
+  JavaScript désactivé (19 cartes, liens corrects, largeur 336 px à 360 px) ;
 - `robots.txt` avec sitemap, `sitemap.xml` valide (10 URL, fichiers présents) ;
 - 404 personnalisée avec `noindex, follow` ;
 - `meta description`, Open Graph sur les pages légales, `theme-color` cohérent.
 
 Limites :
 
-- `cours.html`, `bibliotheque.html`, `parcours.html` et `lecon.html` n'affichent leur contenu
-  qu'après exécution du JavaScript. Le HTML ne contient pas la liste des 19 cours ni le texte des
-  leçons ; les moteurs doivent rendre la page pour l'indexer.
-- Les 19 leçons ne figurent pas dans le sitemap (URL à paramètre, contenu non pré-rendu).
+- `lecon.html` et `parcours.html` restent rendus par JavaScript : les 19 leçons ne sont pas dans le
+  HTML et ne figurent pas dans le sitemap ; les moteurs doivent exécuter le script pour les indexer.
 - Pas de données structurées (`Course`, `EducationalOrganization`), pas de `og:` sur les pages
   applicatives.
 
-**Recommandation structurante :** générer à la mise en ligne des pages HTML statiques par cours
-(ou au moins une page catalogue pré-rendue) à partir des données `assets/js/data/*.js`. C'est le
-chantier qui aurait le plus d'effet sur le référencement.
+**Prochaine étape structurante :** générer une page HTML statique par leçon (à partir des mêmes
+données), l'ajouter au sitemap et, si utile, un balisage `Course`. Le catalogue, lui, est fait.
 
 ### 3.4 Performance — correcte, perfectible
 
 | Page | Poids brut | Poids gzip | Fichiers |
 |---|---|---|---|
 | accueil | 361,4 Ko | 101,1 Ko | 14 |
-| cours | 363,7 Ko | 101,6 Ko | 14 |
+| cours | 394,6 Ko | 104,3 Ko | 14 |
+| bibliothèque | 377,8 Ko | 104,1 Ko | 14 |
 | leçon | 394,6 Ko | 106,7 Ko | 14 |
 | espace de travail | 422,1 Ko | 112,0 Ko | 14 |
 | mentions légales | 58,7 Ko | 13,6 Ko | 5 |
 | 404 | 51,8 Ko | 11,5 Ko | 5 |
 
+- Le pré-rendu ajoute **31 Ko brut / 2,7 Ko gzip** à `cours.html` et **11 Ko brut / 1,8 Ko gzip** à
+  `bibliotheque.html` : négligeable après compression.
 - 18 fichiers JS (478,8 Ko) et 5 fichiers CSS (110,5 Ko) au total.
 - **Toutes les pages applicatives chargent les 5 fichiers de données** (~205 Ko brut : cours et
   documents des deux domaines), même `profil.html` ou `espace-travail.html`.
@@ -136,8 +138,8 @@ et envisager `defer` n'est pas nécessaire (scripts en fin de `body`).
 - Rendu Markdown échappé (`MD.inline` testé avec `<script>`), pas d'injection `innerHTML` non
   échappée dans les données utilisateur.
 - `.htaccess` prêt : HTTPS forcé, HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`,
-  `X-Frame-Options`, `X-Powered-By` retiré, dossiers `tools/` et `docs/` bloqués, extensions
-  sensibles refusées.
+  `X-Frame-Options`, `X-Powered-By` retiré, dossiers `tools/`, `docs/`, `.git/` et `.vscode/`
+  bloqués (403 vérifié), extensions sensibles refusées.
 - **Pas de Content-Security-Policy.** Elle est possible car il n'y a aucun script inline :
   `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;
   object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`.
@@ -147,8 +149,9 @@ et envisager `defer` n'est pas nécessaire (scripts en fin de `body`).
 
 ### 3.6 Déploiement et cache — conforme
 
-Le dépôt est relié au **déploiement automatique Hostinger** : le push du commit `41c071d` a publié
-le site le **15 novembre 2026 à 19:36** (`Last-Modified` identique sur toutes les pages). Vérifications :
+Le dépôt est relié au **déploiement automatique Hostinger** : chaque push sur `main` publie le site
+(publications constatées à 19:36 et 19:42, puis lors de la passe contraste/pré-rendu).
+Vérifications :
 
 - pages légales, 404, `robots.txt`, `sitemap.xml` → 200 ; URL inconnue → 404 avec la page
   personnalisée ;
@@ -175,11 +178,16 @@ après un déploiement important pour les visiteurs qui auraient d'anciennes pag
 ### 3.8 Documentation et maintenance — corrigé
 
 - `README.md` réécrit (présentation, stack, démarrage, scripts, structure, déploiement, contact).
-- [docs/DEPLOIEMENT.md](DEPLOIEMENT.md) ajouté (sauvegarde, envoi, purge, recette, retour arrière).
-- `docs/CONTRAT.md` mis à jour (pages autonomes, outils, `legal.css`, `theme.js`).
+- [docs/DEPLOIEMENT.md](DEPLOIEMENT.md) ajouté (sauvegarde, envoi, purge, recette, retour arrière,
+  déploiement automatique).
+- `docs/CONTRAT.md` mis à jour (pages autonomes, outils, `legal.css`, `theme.js`, pré-rendu).
+- `tools/prerendre.mjs` : catalogue statique pour `cours.html` et `bibliotheque.html`, contrôle
+  d'obsolescence intégré à `npm test`.
+- Contraste corrigé dans `base.css` (`--c-texte-faible` #5f6a80) et captures régénérées.
 - Dossier `qualite-site/` supprimé : il ciblait l'ancienne version « Excellence » avec comptes PHP
   et aurait régressé le site s'il avait été déployé.
-- `.gitignore`, scripts npm (`qa`, `versionner`, `verifier:prod`, `avant-mise-en-ligne`) ajoutés.
+- `.gitignore`, scripts npm (`qa`, `prerendre`, `versionner`, `verifier:prod`,
+  `avant-mise-en-ligne`) ajoutés.
 
 ---
 
@@ -191,24 +199,25 @@ après un déploiement important pour les visiteurs qui auraient d'anciennes pag
 | **B — Qualité et conformité** | `mentions-legales.html`, `confidentialite.html`, `cgu.html`, `404.html`, `robots.txt`, `sitemap.xml`, `assets/css/legal.css`, `assets/js/theme.js`, liens légaux dans le pied de page de toutes les pages, canonical, contrôles SEO automatisés |
 | **C — Dépôt** | `README.md`, `docs/DEPLOIEMENT.md`, mise à jour du contrat, suppression de `qualite-site/`, `.gitignore`, scripts npm, métadonnées `package.json` |
 | **D — Audit** | contrôle navigateur étendu aux pages légales et à la 404, mesures de poids, contrastes, audit DOM, test `file://`, thème sombre, ce rapport |
+| **E — Contraste et pré-rendu** | `--c-texte-faible` #5f6a80 (5,04:1 minimum), `tools/prerendre.mjs` (19 cours + 12 documents dans le HTML), vérification sans JavaScript, captures régénérées |
 
 ---
 
 ## 5. Reste à faire, par priorité
 
-La mise en ligne est faite (commit `41c071d`, publié le 15/11 à 19:36, recette 24/24). Restent :
+La mise en ligne est faite (déploiement automatique, recette 24/24). Le contraste et le pré-rendu du
+catalogue sont faits. Restent :
 
-1. **Corriger le contraste** de `--c-texte-faible` (#5f6a80), régénérer les captures, revérifier.
-2. **Pré-rendre le catalogue** (au moins `cours.html`) et, à terme, générer une page HTML par leçon
-   pour sortir du rendu 100 % JavaScript côté SEO.
-3. **Ajouter la CSP** après test sur une préproduction ou en commentaire dans `.htaccess`.
-4. **Décider de la marque et du domaine** : « SepsHaness » est le nom affiché, `bienvenueduc.com`
+1. **Pré-rendre les leçons** : générer une page HTML par cours (à partir des mêmes données), les
+   ajouter au sitemap et, si utile, un balisage `Course`. Le catalogue est déjà couvert.
+2. **Ajouter la CSP** après test sur une préproduction ou en commentaire dans `.htaccess`.
+3. **Décider de la marque et du domaine** : « SepsHaness » est le nom affiché, `bienvenueduc.com`
    reste l'adresse. Toute évolution doit mettre à jour canonical, sitemap, robots et `.htaccess`.
-5. **Créer une adresse e-mail du domaine** (`contact@bienvenueduc.com`) pour remplacer le Gmail des
+4. **Créer une adresse e-mail du domaine** (`contact@bienvenueduc.com`) pour remplacer le Gmail des
    pages légales, et compléter le RCCM si l'activité est immatriculée.
-6. **Supprimer les résidus PHP** (`auth.js`, `api/`) en production, après sauvegarde.
-7. **Minifier** CSS/JS à la mise en ligne et **découper** le chargement des données par page.
-8. **Purger le cache Hostinger** une dernière fois si l'ancienne URL `/assets/js/app.js` sans `?v=`
+5. **Supprimer les résidus PHP** (`auth.js`, `api/`) en production, après sauvegarde.
+6. **Minifier** CSS/JS à la mise en ligne et **découper** le chargement des données par page.
+7. **Purger le cache Hostinger** une dernière fois si l'ancienne URL `/assets/js/app.js` sans `?v=`
    reste servie : sans effet sur les pages, mais cela évite toute confusion lors d'un contrôle.
 
 ---
@@ -216,9 +225,10 @@ La mise en ligne est faite (commit `41c071d`, publié le 15/11 à 19:36, recette
 ## 6. Reproductibilité
 
 ```powershell
-npm test                 # 29 contrôles
+npm test                 # pré-rendu + 30 contrôles
 npm start                # serveur local 127.0.0.1:4173
 npm run qa               # 36 mesures, 22 captures, 9 interactions
+npm run prerendre        # régénère le catalogue statique
 npm run versionner       # met à jour les ?v= si un asset a changé
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/preparer-zip.ps1
 npm run verifier:prod    # contrôle du site en ligne
