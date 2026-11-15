@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cours — SepsHaness</title>
+  <meta name="description" content="Catalogue des cours de SepsHaness : recherche instantanée, filtres par niveau et par matière, tri par durée ou par titre, reprise du dernier cours consulté." />
+  <link rel="icon" href="assets/img/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/catalogue.css" />
+</head>
+<body data-page="cours">
+  <div id="app-header"></div>
+
+  <main id="contenu">
+    <div class="entete-page">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d'Ariane">
+          <a href="index.html">Accueil</a>
+          <span class="fil-ariane__separateur" aria-hidden="true">/</span>
+          <span aria-current="page">Cours</span>
+        </nav>
+        <div class="entete-page__inner">
+          <div>
+            <span class="surtitre">Explorer</span>
+            <h1 class="entete-page__titre">Catalogue des cours</h1>
+            <p class="entete-page__texte">
+              Tous les cours du site, du primaire à l'université. Cherchez une notion, filtrez par
+              niveau ou par matière, puis ouvrez la leçon qui vous intéresse.
+            </p>
+          </div>
+          <p class="cat-compteur" id="cat-compteur-cours" aria-live="polite">
+            <span aria-hidden="true" data-icon="livre" data-taille="18"></span>
+            <span id="cat-compteur-cours-texte">Catalogue en chargement…</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <section class="cat-bandeau" id="cat-reprendre" aria-labelledby="cat-reprendre-titre" hidden>
+      <div class="conteneur" id="cat-reprendre-contenu"></div>
+    </section>
+
+    <section class="cat-barre-filtres" aria-labelledby="cat-titre-filtres">
+      <div class="conteneur">
+        <h2 class="sr-only" id="cat-titre-filtres">Rechercher et filtrer les cours</h2>
+        <div class="panneau cat-filtres">
+          <div class="cat-filtres__haut">
+            <div class="barre-recherche cat-recherche">
+              <span aria-hidden="true" data-icon="recherche" data-taille="19"></span>
+              <label class="sr-only" for="cat-recherche">Rechercher un cours</label>
+              <input type="search" id="cat-recherche" placeholder="Rechercher un cours, une notion, un mot-clé…" autocomplete="off" />
+            </div>
+            <div class="champ cat-tri">
+              <label class="champ__label" for="cat-tri">Trier par</label>
+              <select class="liste-deroulante" id="cat-tri">
+                <option value="pertinence">Pertinence</option>
+                <option value="duree">Durée croissante</option>
+                <option value="titre">Titre A → Z</option>
+                <option value="niveau">Niveau</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cat-filtres__groupe">
+            <span class="cat-filtres__label" id="cat-label-niveaux">Niveau</span>
+            <div class="filtres" id="cat-filtres-niveau" role="group" aria-labelledby="cat-label-niveaux"></div>
+          </div>
+
+          <div class="cat-filtres__groupe">
+            <span class="cat-filtres__label" id="cat-label-matieres">Matière</span>
+            <div class="filtres" id="cat-filtres-matiere" role="group" aria-labelledby="cat-label-matieres"></div>
+          </div>
+
+          <div class="cat-filtres__pied">
+            <p class="petit texte-doux cat-resume-filtres" id="cat-resume-filtres" aria-live="polite"></p>
+            <button class="btn btn--fantome btn--sm" type="button" id="cat-reinitialiser">
+              <span aria-hidden="true" data-icon="reinitialiser" data-taille="16"></span>
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cat-titre-resultats">
+      <div class="conteneur">
+        <div class="section__entete">
+          <div>
+            <h2 class="section__titre" id="cat-titre-resultats">Cours disponibles</h2>
+            <p class="section__texte" id="cat-compte-resultats" aria-live="polite"></p>
+          </div>
+          <a class="btn btn--secondaire" href="parcours.html">
+            <span aria-hidden="true" data-icon="parcours" data-taille="18"></span>
+            Voir les parcours guidés
+          </a>
+        </div>
+        <div class="grille grille--auto cat-resultats" id="cat-resultats"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="assets/js/markdown.js"></script>
+  <script src="assets/js/data/core.js"></script>
+  <script src="assets/js/data/cours-stem.js"></script>
+  <script src="assets/js/data/cours-lettres.js"></script>
+  <script src="assets/js/data/documents-stem.js"></script>
+  <script src="assets/js/data/documents-lettres.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/cours.js"></script>
+</body>
+</html>

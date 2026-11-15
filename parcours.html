@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parcours — SepsHaness</title>
+  <meta name="description" content="Parcours guidés de SepsHaness : des itinéraires de cours par niveau, avec étapes détaillées, progression enregistrée et matières à explorer." />
+  <link rel="icon" href="assets/img/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/catalogue.css" />
+</head>
+<body data-page="parcours">
+  <div id="app-header"></div>
+
+  <main id="contenu">
+    <div class="entete-page">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d'Ariane">
+          <a href="index.html">Accueil</a>
+          <span class="fil-ariane__separateur" aria-hidden="true">/</span>
+          <span aria-current="page">Parcours</span>
+        </nav>
+        <div class="entete-page__inner">
+          <div>
+            <span class="surtitre">Apprendre pas à pas</span>
+            <h1 class="entete-page__titre">Des parcours guidés pour progresser</h1>
+            <p class="entete-page__texte">
+              Choisissez un itinéraire, suivez les étapes dans l'ordre et gardez la trace de ce que vous
+              avez terminé. Chaque parcours réunit des cours complémentaires pour un niveau donné, du
+              primaire à l'université.
+            </p>
+          </div>
+          <div class="entete-page__actions">
+            <a class="btn btn--primaire" href="cours.html">
+              <span aria-hidden="true" data-icon="livre" data-taille="18"></span>
+              Catalogue des cours
+            </a>
+            <a class="btn btn--secondaire" href="bibliotheque.html">
+              <span aria-hidden="true" data-icon="bibliotheque" data-taille="18"></span>
+              Bibliothèque
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-bandeau-filtres">
+      <div class="conteneur cat-bandeau-filtres__inner">
+        <h2 class="cat-filtres__label" id="cat-titre-filtre-niveau">Filtrer par niveau</h2>
+        <div class="filtres" id="cat-filtres-niveau" role="group" aria-labelledby="cat-titre-filtre-niveau"></div>
+      </div>
+    </div>
+
+    <section class="section" aria-labelledby="cat-titre-parcours">
+      <div class="conteneur">
+        <div class="section__entete">
+          <div>
+            <h2 class="section__titre" id="cat-titre-parcours">Parcours guidés</h2>
+            <p class="section__texte">
+              Un objectif, plusieurs cours, une progression lisible. Ouvrez une étape à tout moment :
+              votre avancement est conservé dans ce navigateur.
+            </p>
+          </div>
+          <p class="petit texte-doux" id="cat-compte-parcours" aria-live="polite"></p>
+        </div>
+        <div class="grille grille--2 cat-parcours-liste" id="cat-parcours-liste"></div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="cat-titre-niveaux">
+      <div class="conteneur">
+        <div class="section__entete">
+          <div>
+            <h2 class="section__titre" id="cat-titre-niveaux">Les quatre niveaux</h2>
+            <p class="section__texte">
+              Chaque niveau a ses exigences, ses formats de cours et ses matières dominantes. Repérez
+              celui qui vous correspond, puis explorez ses matières.
+            </p>
+          </div>
+        </div>
+        <div class="grille grille--2" id="cat-liste-niveaux"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cat-titre-matieres">
+      <div class="conteneur">
+        <div class="section__entete">
+          <div>
+            <h2 class="section__titre" id="cat-titre-matieres">Toutes les matières</h2>
+            <p class="section__texte">
+              Huit matières, des cours pour tous les niveaux et des documents de révision associés.
+            </p>
+          </div>
+          <a class="btn btn--secondaire" href="cours.html">
+            <span aria-hidden="true" data-icon="filtre" data-taille="18"></span>
+            Voir tout le catalogue
+          </a>
+        </div>
+        <div class="grille grille--4" id="cat-liste-matieres"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="assets/js/markdown.js"></script>
+  <script src="assets/js/data/core.js"></script>
+  <script src="assets/js/data/cours-stem.js"></script>
+  <script src="assets/js/data/cours-lettres.js"></script>
+  <script src="assets/js/data/documents-stem.js"></script>
+  <script src="assets/js/data/documents-lettres.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/parcours.js"></script>
+</body>
+</html>

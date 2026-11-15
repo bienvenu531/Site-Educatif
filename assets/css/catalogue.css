@@ -1,0 +1,849 @@
+/* ==========================================================================
+   SepsHaness — catalogue.css
+   Styles propres aux pages parcours.html, cours.html et bibliotheque.html.
+   Toutes les classes ajoutées ici sont préfixées « cat- ».
+   Couleurs et espacements : jetons de base.css uniquement.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. En-tête de page, compteurs et filtres
+   -------------------------------------------------------------------------- */
+.cat-bandeau {
+  padding-block: var(--e-5) 0;
+}
+
+.cat-entete-actions {
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.cat-compteur {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-pilule);
+  background: var(--c-surface);
+  color: var(--c-texte-doux);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cat-compteur .icone {
+  color: var(--c-primaire);
+  flex-shrink: 0;
+}
+
+.cat-bandeau-filtres {
+  padding-block: var(--e-4);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-bordure);
+}
+
+.cat-bandeau-filtres__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-4);
+}
+
+.cat-barre-filtres {
+  padding-block: var(--e-5) 0;
+}
+
+.cat-filtres {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.cat-filtres__haut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--e-3);
+}
+
+.cat-recherche {
+  flex: 1 1 260px;
+}
+
+.cat-tri {
+  flex: 0 1 220px;
+  min-width: 190px;
+}
+
+.cat-filtres__groupe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+}
+
+.cat-filtres__label {
+  flex: 0 0 76px;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-texte-faible);
+}
+
+.cat-filtres__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
+}
+
+.cat-resume-filtres {
+  margin: 0;
+  max-width: 66ch;
+}
+
+/* Grille de résultats : un état vide occupe toute la largeur */
+.cat-resultats--vide {
+  display: block;
+}
+
+.cat-resultats {
+  align-items: stretch;
+}
+
+.cat-carte-cliquable {
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   2. Bandeau « Reprendre » (cours.html)
+   -------------------------------------------------------------------------- */
+.cat-reprendre {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-4);
+  padding: var(--e-5);
+  background: linear-gradient(135deg, var(--teinte-doux) 0%, var(--c-surface) 68%);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-lg);
+  box-shadow: var(--ombre-1);
+}
+
+.cat-reprendre__icone {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--rayon-md);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  flex-shrink: 0;
+}
+
+.cat-reprendre__corps {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-reprendre__corps .surtitre {
+  font-size: 0.72rem;
+}
+
+.cat-reprendre__titre {
+  font-size: clamp(1.1rem, 1rem + 0.45vw, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.cat-reprendre__titre a {
+  color: var(--c-texte);
+}
+
+.cat-reprendre__titre a:hover {
+  color: var(--teinte);
+  text-decoration: none;
+}
+
+.cat-reprendre__texte {
+  max-width: 68ch;
+  font-size: 0.9rem;
+  color: var(--c-texte-doux);
+}
+
+.cat-reprendre__meta {
+  gap: var(--e-2) var(--e-4);
+  margin-top: 3px;
+}
+
+.cat-reprendre__note {
+  margin: 0;
+  max-width: 70ch;
+}
+
+.cat-reprendre__action {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. Parcours guidés (parcours.html)
+   -------------------------------------------------------------------------- */
+.cat-parcours-liste {
+  align-items: stretch;
+}
+
+.cat-parcours {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  height: 100%;
+  padding: var(--e-5);
+  overflow: hidden;
+  background: var(--c-surface);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-lg);
+  box-shadow: var(--ombre-1);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.cat-parcours::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--teinte, var(--c-primaire));
+  opacity: 0.9;
+}
+
+.cat-parcours:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ombre-2);
+  border-color: var(--c-bordure-forte);
+}
+
+.cat-parcours__haut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+.cat-parcours__icone {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--rayon-md);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  flex-shrink: 0;
+}
+
+.cat-parcours__etiquettes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.cat-parcours__titre {
+  font-size: 1.18rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.cat-parcours__texte {
+  font-size: 0.9rem;
+  color: var(--c-texte-doux);
+}
+
+.cat-parcours__pourqui {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 11px;
+  border-radius: var(--rayon-sm);
+  background: var(--c-surface-2);
+  color: var(--c-texte-doux);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.cat-parcours__pourqui .icone {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--c-texte-faible);
+}
+
+.cat-parcours__pourqui strong {
+  color: var(--c-texte);
+}
+
+/* Étapes numérotées */
+.cat-etapes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-bordure);
+}
+
+.cat-etape {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--c-bordure);
+}
+
+.cat-etape:last-child {
+  border-bottom: 0;
+}
+
+.cat-etape--vide {
+  color: var(--c-texte-faible);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.cat-etape__num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-texte-doux);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cat-etape--terminee .cat-etape__num {
+  background: var(--c-succes-doux);
+  color: var(--c-succes);
+}
+
+.cat-etape__corps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-etape__titre {
+  color: var(--c-texte);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.cat-etape__titre:hover {
+  color: var(--teinte, var(--c-primaire));
+}
+
+.cat-etape__meta {
+  color: var(--c-texte-faible);
+  font-size: 0.76rem;
+}
+
+.cat-etape__statut {
+  display: inline-flex;
+  margin-top: 3px;
+  color: var(--c-succes);
+  flex-shrink: 0;
+}
+
+.cat-parcours__pied {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  margin-top: auto;
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
+}
+
+.cat-jauge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-parcours__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--e-2);
+}
+
+/* --------------------------------------------------------------------------
+   4. Niveaux et matières (parcours.html)
+   -------------------------------------------------------------------------- */
+.cat-points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cat-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--c-texte-doux);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.cat-points li + li {
+  margin-top: 0;
+}
+
+.cat-points .icone {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--c-succes);
+}
+
+.cat-matieres-niveau {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: var(--e-2);
+}
+
+.cat-matieres-niveau .tuile-matiere {
+  padding: var(--e-2) var(--e-3);
+  gap: var(--e-2);
+}
+
+.cat-matieres-niveau .tuile-matiere__icone {
+  width: 34px;
+  height: 34px;
+}
+
+.cat-tuile-texte {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cat-tuile-texte .tuile-matiere__nom,
+.cat-tuile-texte .tuile-matiere__detail {
+  overflow-wrap: anywhere;
+}
+
+.cat-niveau__lien {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   5. Cartes de documents (bibliotheque.html)
+   -------------------------------------------------------------------------- */
+.cat-doc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: var(--e-5);
+  overflow: hidden;
+  background: var(--c-surface);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-lg);
+  box-shadow: var(--ombre-1);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.cat-doc::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--teinte, var(--c-primaire));
+  opacity: 0.9;
+}
+
+.cat-doc:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ombre-2);
+  border-color: var(--c-bordure-forte);
+}
+
+.cat-doc__haut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+.cat-doc__icone {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--rayon-md);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  flex-shrink: 0;
+}
+
+.cat-doc__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.cat-doc__type {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.cat-doc__lu {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--rayon-pilule);
+  background: var(--c-succes-doux);
+  color: var(--c-succes);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.cat-doc__titre {
+  margin: 0;
+  font-size: 1.04rem;
+  line-height: 1.3;
+}
+
+.cat-doc__ouvrir {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-texte);
+  font: inherit;
+  font-size: 1.04rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.cat-doc__ouvrir:hover {
+  color: var(--teinte, var(--c-primaire));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cat-doc__texte {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--c-texte-doux);
+  font-size: 0.87rem;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.cat-doc__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-3);
+}
+
+.cat-doc__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-2);
+  margin-top: auto;
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
+}
+
+.cat-doc__maj {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--c-texte-faible);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.cat-doc__pied .btn {
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Lecteur de document (modale)
+   -------------------------------------------------------------------------- */
+.cat-lecteur {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.cat-lecteur__entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.cat-etiquette-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.cat-lecteur__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-4);
+  padding-bottom: var(--e-3);
+  border-bottom: 1px solid var(--c-bordure);
+}
+
+.cat-lecteur__description {
+  color: var(--c-texte-doux);
+  font-size: 0.92rem;
+}
+
+.cat-lecteur__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+}
+
+.cat-lecteur .contenu-riche {
+  max-width: none;
+}
+
+.cat-aide ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 1.2rem;
+  color: var(--c-texte-doux);
+  font-size: 0.92rem;
+}
+
+.cat-aide li + li {
+  margin-top: 0;
+}
+
+.cat-aide strong {
+  color: var(--c-texte);
+}
+
+/* --------------------------------------------------------------------------
+   7. Adaptation aux écrans
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .cat-reprendre {
+    padding: var(--e-4);
+  }
+
+  .cat-doc,
+  .cat-parcours {
+    padding: var(--e-4);
+  }
+}
+
+@media (max-width: 720px) {
+  .cat-filtres__haut {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cat-tri {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cat-filtres__groupe {
+    align-items: flex-start;
+  }
+
+  .cat-filtres__label {
+    flex-basis: 100%;
+  }
+
+  .cat-filtres__pied {
+    align-items: flex-start;
+  }
+
+  .cat-compteur {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cat-entete-actions {
+    width: 100%;
+  }
+
+  .cat-reprendre {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cat-reprendre__action {
+    align-self: stretch;
+  }
+
+  .cat-reprendre__action .btn {
+    width: 100%;
+  }
+
+  .cat-parcours__actions {
+    justify-content: flex-start;
+  }
+
+  .cat-doc__haut {
+    align-items: flex-start;
+  }
+
+  .cat-doc__badges {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .cat-matieres-niveau {
+    grid-template-columns: 1fr;
+  }
+
+  .cat-doc__pied {
+    align-items: flex-start;
+  }
+
+  .cat-doc__pied .btn {
+    width: 100%;
+  }
+
+  .cat-jauge .rangee {
+    gap: 4px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Impression : n'imprimer que le document ouvert dans le lecteur
+   -------------------------------------------------------------------------- */
+@media print {
+  body.cat--impression {
+    --c-fond: #fff;
+    --c-surface: #fff;
+    --c-surface-2: #f4f4f4;
+    --c-surface-3: #e6e6e6;
+    --c-texte: #111;
+    --c-texte-doux: #333;
+    --c-texte-faible: #555;
+    --c-bordure: #ccc;
+    --c-bordure-forte: #999;
+    --c-primaire: #1d4ed8;
+    --c-primaire-doux: #eef2ff;
+    --c-succes: #0f6b4a;
+    --c-succes-doux: #e6f6ef;
+    --c-amber-doux: #fdf1dd;
+    background: #fff;
+    color: #111;
+  }
+
+  body.cat--impression > *:not(.modale-voile) {
+    display: none !important;
+  }
+
+  body.cat--impression .modale-voile {
+    display: block !important;
+    position: static;
+    inset: auto;
+    padding: 0;
+    background: #fff;
+    backdrop-filter: none;
+    animation: none;
+  }
+
+  body.cat--impression .modale {
+    max-width: none;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+  }
+
+  body.cat--impression .modale__entete {
+    padding: 0 0 var(--e-3);
+    border-bottom: 1px solid var(--c-bordure);
+  }
+
+  body.cat--impression .modale__fermer,
+  body.cat--impression .modale__pied,
+  body.cat--impression .cat-lecteur__actions,
+  body.cat--impression .cat-lecteur__entete {
+    display: none !important;
+  }
+
+  body.cat--impression .modale__corps {
+    padding: 0;
+    overflow: visible;
+  }
+
+  body.cat--impression .cat-lecteur {
+    gap: var(--e-2);
+  }
+
+  body.cat--impression .contenu-riche {
+    max-width: none;
+  }
+
+  body.cat--impression .contenu-riche pre {
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+
+  body.cat--impression .contenu-riche table {
+    page-break-inside: avoid;
+  }
+}
