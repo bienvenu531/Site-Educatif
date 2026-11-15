@@ -22,6 +22,9 @@ DirectoryIndex index.html
 
   # Les dossiers de travail ne doivent jamais être servis.
   RewriteRule ^(tools|docs)(/|$) - [F,L]
+
+  # Dossiers de configuration et de versionnement.
+  RewriteRule ^\.(git|vscode|github|idea)(/|$) - [F,L]
 </IfModule>
 
 # --------------------------------------------------------------- Sécurité

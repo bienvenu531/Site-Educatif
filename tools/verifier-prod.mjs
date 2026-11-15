@@ -281,12 +281,36 @@ try {
    7. Contrôle de marque (l'ancienne coquille « Excellence » ne doit plus sortir)
    ------------------------------------------------------------------------- */
 try {
-  const script = await requete(`${BASE}/assets/js/app.js`, { binaire: true });
+  // On contrôle l'URL réellement chargée par les pages (avec ?v=…), pas
+  // l'ancienne URL non versionnée qui peut rester en cache CDN sans être utilisée.
+  const accueil = await requete(`${BASE}/`);
+  const reference = (accueil.corps.match(/src="(assets\/js\/app\.js[^"]*)"/) || [])[1];
+  const url = reference ? `${BASE}/${reference}` : `${BASE}/assets/js/app.js?cb=${Date.now()}`;
+  const script = await requete(url, { binaire: true });
   const texte = script.corps.toString("utf8");
-  if (!estSucces(script.statut)) erreur(`app.js → ${script.statut}`);
-  else if (/Excellence/.test(texte)) erreur("app.js servi par le CDN contient encore « Excellence » : cache périmé");
-  else if (!/SepsHaness/.test(texte)) erreur("app.js servi ne contient pas « SepsHaness »");
-  else ok("app.js servi : coquille SepsHaness à jour");
+
+  if (!estSucces(script.statut)) {
+    erreur(`app.js → ${script.statut}`);
+  } else if (/Excellence/.test(texte)) {
+    erreur(`app.js servi (${reference || "URL directe"}) contient encore « Excellence » : cache périmé`);
+  } else if (!/SepsHaness/.test(texte)) {
+    erreur("app.js servi ne contient pas « SepsHaness »");
+  } else {
+    ok(`app.js servi : coquille SepsHaness à jour (${reference || "URL directe"})`);
+  }
+
+  // L'ancienne URL non versionnée peut rester en cache : information seulement,
+  // les pages ne l'utilisent plus.
+  if (reference) {
+    try {
+      const brut = await requete(`${BASE}/assets/js/app.js`, { binaire: true });
+      if (estSucces(brut.statut) && /Excellence/.test(brut.corps.toString("utf8"))) {
+        avertir("L'URL non versionnée /assets/js/app.js est encore en cache (sans effet : les pages chargent ?v=…). Une purge la rafraîchira.");
+      }
+    } catch {
+      /* ignoré */
+    }
+  }
 } catch (probleme) {
   erreur(`app.js : ${probleme.message}`);
 }

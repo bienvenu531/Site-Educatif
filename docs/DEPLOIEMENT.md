@@ -84,15 +84,35 @@ les pages, supprimez-les après vérification. Ils n'ont plus de rôle dans la v
 
 ---
 
-## 4. Envoi et purge du cache
+## 4. Mise en ligne
+
+### 4.1 Déploiement automatique (actif, recommandé)
+
+Le dépôt est relié au **déploiement automatique Hostinger** : un push sur `main` publie le contenu
+du dépôt sur le site. Vérifié le 15 novembre 2026 : le commit `41c071d` a été publié à 19:36, avec
+les pages légales, la 404, `robots.txt`, `sitemap.xml` et le `.htaccess`.
+
+1. `npm run avant-mise-en-ligne` (versionner + contrôler) ;
+2. `git add -A`, `git commit`, `git push origin main` ;
+3. attendre la fin du déploiement (1 à 2 minutes), puis `npm run verifier:prod` ;
+4. purger le cache Hostinger si le vérificateur signale une ancienne version.
+
+> Le déploiement copie tout le dépôt, y compris `tools/`, `docs/`, `package.json`, `server.mjs`,
+> `.gitignore` et `.vscode/`. Le `.htaccess` bloque ces chemins (403 vérifié). Ne jamais committer
+> de secret (mot de passe, jeton, fichier `.env`).
+
+### 4.2 Envoi manuel (secours)
 
 1. **Téléversez** le contenu de `dist/site-a-televerser.zip` (ou les fichiers de la section 2)
    dans `public_html/`, puis utilisez **Extraire** et supprimez le ZIP.
 2. **Écrasez** les anciens fichiers quand le gestionnaire le demande.
-3. **Videz les caches** : hPanel → **Performance** → *Vider le cache* (site et CDN s'il est actif).
+
+### 4.3 Purge du cache
+
+1. hPanel → **Performance** → *Vider le cache* (site et CDN s'il est actif).
    Sans cette purge, le CDN Hostinger peut continuer à servir l'ancien `app.js` pendant plusieurs
    heures — c'est exactement ce qui a produit l'ancienne coquille « Excellence » en ligne.
-4. Dans le navigateur : `Ctrl + F5`, ou testez en navigation privée.
+2. Dans le navigateur : `Ctrl + F5`, ou testez en navigation privée.
 
 ---
 
@@ -107,7 +127,7 @@ les pages, supprimez-les après vérification. Ils n'ont plus de rôle dans la v
 | `ErrorDocument 404 /404.html` | page d'erreur cohérente |
 | Cache : HTML `no-cache`, CSS/JS `1 an` | les URLs versionnées `?v=` peuvent être mises en cache longtemps |
 | Compression | performance |
-| Blocage `.env`, `.sql`, `.md`, archives, `tools/`, `docs/` | empêche le téléchargement de fichiers de travail |
+| Blocage `.env`, `.sql`, `.md`, archives, `tools/`, `docs/`, `.vscode/`, `.git/` | empêche le téléchargement de fichiers de travail |
 
 **HSTS** est volontairement sans `includeSubDomains`. Ne l'ajoutez que si tous vos sous-domaines
 sont en HTTPS.

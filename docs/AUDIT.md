@@ -3,7 +3,7 @@
 **Date :** 15 novembre 2026
 **Périmètre :** dépôt local, site en production, rendu navigateur, SEO, accessibilité, performance,
 sécurité, déploiement.
-**Version auditée :** commit `214a3b1` + modifications du 15 novembre 2026 (chantiers A à D).
+**Version auditée :** commit `41c071d`, déployé automatiquement le 15 novembre 2026 à 19:36.
 
 ---
 
@@ -11,21 +11,20 @@ sécurité, déploiement.
 
 Le projet est **cohérent et fonctionnel** : les 12 pages se chargent sans erreur JavaScript, aucun
 débordement horizontal n'est mesuré de 360 à 1440 px, les 9 parcours interactifs testés fonctionnent,
-et le contrôle automatisé passe **29/29**.
+et le contrôle automatisé passe **29/29**. En production, la recette passe **24/24** depuis le
+déploiement automatique du 15 novembre 2026 à 19:36.
 
-Trois points structurants restent ouverts :
+Deux points restent ouverts :
 
-1. **La mise en ligne** : les pages légales, la 404, `robots.txt`, `sitemap.xml` et le `.htaccess`
-   sont prêts dans le dépôt mais **pas encore déployés**. En production, ces URL répondent toujours
-   404 et les en-têtes de sécurité sont absents.
-2. **Le contraste du texte secondaire** en thème clair : `--c-texte-faible` (#79839a) atteint
+1. **Le contraste du texte secondaire** en thème clair : `--c-texte-faible` (#79839a) atteint
    **3,52:1** sur le fond et **3,80:1** sur les cartes, sous le seuil WCAG AA de 4,5:1.
-3. **Le SEO du catalogue** : les cours, documents et leçons sont rendus par JavaScript. Les pages
+2. **Le SEO du catalogue** : les cours, documents et leçons sont rendus par JavaScript. Les pages
    HTML ne contiennent que la coquille, ce qui limite l'indexation du contenu.
 
 Le reste est propre : contenu vérifié (19 cours, 12 documents, 76 questions), aucun lien cassé,
 thème sombre opérationnel, fonctionnement en `file://`, pages légales complètes et liens de pied de
-page sur toutes les pages.
+page sur toutes les pages. La mise en ligne (pages légales, 404, `robots.txt`, `sitemap.xml`,
+`.htaccess`, assets versionnés) est **faite**.
 
 ---
 
@@ -40,7 +39,7 @@ page sur toutes les pages.
 | Fonctionnement `file://` | Chrome headless | **fonctionnel** |
 | Poids et compression des pages | mesure locale + gzip | voir § 3.4 |
 | Contrastes des jetons | calcul WCAG | 1 écart en thème clair |
-| Site en production | `npm run verifier:prod` | **9 réussites / 27 erreurs** (déploiement et cache en attente) |
+| Site en production | `npm run verifier:prod` | **24 réussites / 0 erreur** (déploiement automatique du 15/11 à 19:36) |
 
 Limites : pas de Lighthouse ni d'axe-core (non installés), pas de test sur appareil physique, pas de
 test de charge ni de test d'intrusion. Les mesures sont faites dans Chrome sur Windows.
@@ -146,22 +145,23 @@ et envisager `defer` n'est pas nécessaire (scripts en fin de `body`).
 - Résidus probables en production : `assets/js/auth.js` et un éventuel dossier `api/` de l'ancienne
   version avec comptes. À supprimer après sauvegarde ; ils ne sont plus appelés.
 
-### 3.6 Déploiement et cache — le point le plus opérationnel
+### 3.6 Déploiement et cache — conforme
 
-Le dépôt et l'origine Hostinger sont **identiques** (SHA-256 comparés pour `index.html`,
-`app.js`, `base.css`, `store.js`). En revanche :
+Le dépôt est relié au **déploiement automatique Hostinger** : le push du commit `41c071d` a publié
+le site le **15 novembre 2026 à 19:36** (`Last-Modified` identique sur toutes les pages). Vérifications :
 
-- le CDN Hostinger continue de servir, selon l'edge et le moment, un `app.js` du 14 novembre
-  (marque « Excellence », lien mort vers `accueil-apprenant.html`) : constaté à plusieurs reprises
-  (`x-hcdn-cache-status: HIT`, `Last-Modified: 14 nov.`, `Age ≈ 19 h`) ;
-- les pages légales, `robots.txt`, `sitemap.xml`, `404.html` et le `.htaccess` **ne sont pas encore
-  en ligne** ;
-- `www.bienvenueduc.com` répond toujours 200 (pas de redirection), faute de `.htaccess` déployé ;
-- `npm run verifier:prod` échoue donc sur 27 points, dont la coquille « Excellence » servie par le
-  CDN. C'est le symptôme du cache, pas du code : l'origine et le dépôt sont alignés.
+- pages légales, 404, `robots.txt`, `sitemap.xml` → 200 ; URL inconnue → 404 avec la page
+  personnalisée ;
+- en-têtes HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`,
+  `Permissions-Policy` présents ; `X-Powered-By` absent ;
+- `www` → **301** vers l'apex ; assets versionnés (13/13) identiques au dépôt (SHA-256),
+  `app.js?v=…` porte bien la coquille SepsHaness ;
+- `tools/`, `docs/`, `package.json`, `server.mjs`, `.gitignore` → **403** ;
+- `npm run verifier:prod` : **24/24**.
 
-Le versionnement `?v=<empreinte>` et la procédure de purge sont décrits dans
-[docs/DEPLOIEMENT.md](DEPLOIEMENT.md) ; `npm run verifier:prod` mesure l'écart après envoi.
+L'ancienne URL `/assets/js/app.js` sans `?v=` a pu rester en cache CDN à certains moments ; les pages
+ne l'utilisent plus, le versionnement rend ce résidu inoffensif. Une purge Hostinger reste recommandée
+après un déploiement important pour les visiteurs qui auraient d'anciennes pages en cache.
 
 ### 3.7 Contenu et qualité — conforme
 
@@ -196,18 +196,20 @@ Le versionnement `?v=<empreinte>` et la procédure de purge sont décrits dans
 
 ## 5. Reste à faire, par priorité
 
-1. **Déployer** les fichiers de la section 2 de [docs/DEPLOIEMENT.md](DEPLOIEMENT.md), puis
-   `npm run verifier:prod` doit afficher **SUCCÈS**. Purger le cache Hostinger avant de conclure.
-2. **Corriger le contraste** de `--c-texte-faible` (#5f6a80), régénérer les captures, revérifier.
-3. **Pré-rendre le catalogue** (au moins `cours.html`) et, à terme, générer une page HTML par leçon
+La mise en ligne est faite (commit `41c071d`, publié le 15/11 à 19:36, recette 24/24). Restent :
+
+1. **Corriger le contraste** de `--c-texte-faible` (#5f6a80), régénérer les captures, revérifier.
+2. **Pré-rendre le catalogue** (au moins `cours.html`) et, à terme, générer une page HTML par leçon
    pour sortir du rendu 100 % JavaScript côté SEO.
-4. **Ajouter la CSP** après test sur une préproduction ou en commentaire dans `.htaccess`.
-5. **Décider de la marque et du domaine** : « SepsHaness » est le nom affiché, `bienvenueduc.com`
+3. **Ajouter la CSP** après test sur une préproduction ou en commentaire dans `.htaccess`.
+4. **Décider de la marque et du domaine** : « SepsHaness » est le nom affiché, `bienvenueduc.com`
    reste l'adresse. Toute évolution doit mettre à jour canonical, sitemap, robots et `.htaccess`.
-6. **Créer une adresse e-mail du domaine** (`contact@bienvenueduc.com`) pour remplacer le Gmail des
+5. **Créer une adresse e-mail du domaine** (`contact@bienvenueduc.com`) pour remplacer le Gmail des
    pages légales, et compléter le RCCM si l'activité est immatriculée.
-7. **Supprimer les résidus PHP** (`auth.js`, `api/`) en production, après sauvegarde.
-8. **Minifier** CSS/JS à la mise en ligne et **découper** le chargement des données par page.
+6. **Supprimer les résidus PHP** (`auth.js`, `api/`) en production, après sauvegarde.
+7. **Minifier** CSS/JS à la mise en ligne et **découper** le chargement des données par page.
+8. **Purger le cache Hostinger** une dernière fois si l'ancienne URL `/assets/js/app.js` sans `?v=`
+   reste servie : sans effet sur les pages, mais cela évite toute confusion lors d'un contrôle.
 
 ---
 

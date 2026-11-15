@@ -150,17 +150,17 @@ Un rapport d'audit est disponible dans [docs/AUDIT.md](docs/AUDIT.md).
 
 ## Déploiement
 
-Le site est hébergé chez **Hostinger** (Apache/LiteSpeed). La procédure complète — sauvegarde,
-fichiers à envoyer, purge du cache, recette, retour arrière — est dans
+Le site est hébergé chez **Hostinger** (Apache/LiteSpeed). Le dépôt est relié au **déploiement
+automatique** : un push sur `main` publie le site. La procédure complète — contrôle avant envoi,
+purge du cache, recette, retour arrière, envoi manuel par ZIP — est dans
 [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md).
 
 En résumé :
 
 ```powershell
 npm run avant-mise-en-ligne   # versionner + contrôler
-powershell -NoProfile -ExecutionPolicy Bypass -File tools/preparer-zip.ps1
-# envoyer dist/site-a-televerser.zip dans public_html/, puis Extraire
-# hPanel → Performance → vider le cache, puis :
+git add -A; git commit; git push origin main
+# attendre 1-2 min, puis :
 npm run verifier:prod
 ```
 
