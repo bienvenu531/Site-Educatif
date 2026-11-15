@@ -6,6 +6,7 @@
  * intégrité des données pédagogiques, rendu Markdown et API du Store.
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
@@ -36,6 +37,21 @@ function lire(cheminRelatif) {
 
 function existe(cheminRelatif) {
   return existsSync(path.join(RACINE, cheminRelatif));
+}
+
+/** Retire le paramètre de version d'une URL locale : assets/x.js?v=abc → assets/x.js */
+function sansVersion(url) {
+  return url.split("?")[0];
+}
+
+const empreintes = new Map();
+
+/** Début du SHA-256 d'un fichier, tel qu'utilisé par tools/versionner.mjs. */
+function empreinte(cheminRelatif) {
+  if (!empreintes.has(cheminRelatif)) {
+    empreintes.set(cheminRelatif, createHash("sha256").update(readFileSync(path.join(RACINE, cheminRelatif))).digest("hex").slice(0, 8));
+  }
+  return empreintes.get(cheminRelatif);
 }
 
 function fichiers(dossier, extensions) {
@@ -85,6 +101,9 @@ for (const page of PAGES) {
   htmls.push({ ...page, contenu: lire(page.fichier) });
 }
 
+let versionsOk = true;
+let referencesVersionnees = 0;
+
 for (const page of htmls) {
   const html = page.contenu;
   const nom = page.fichier;
@@ -102,15 +121,15 @@ for (const page of htmls) {
   if (h1 !== 1) erreur(`${nom} : ${h1} balise(s) <h1> (une seule attendue)`);
   if (/<title>\s*<\/title>/.test(html)) erreur(`${nom} : <title> vide`);
 
-  // Feuilles de style
-  const css = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)].map((m) => m[1]);
+  // Feuilles de style (les URL versionnées ?v=… sont ramenées au fichier)
+  const css = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)].map((m) => sansVersion(m[1]));
   if (!css.includes("assets/css/base.css")) erreur(`${nom} : base.css non chargée`);
   for (const feuille of css) {
     if (!existe(feuille)) erreur(`${nom} : feuille de style introuvable → ${feuille}`);
   }
 
   // Scripts : présence, ordre, existence, script de page
-  const scripts = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1]);
+  const scripts = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => sansVersion(m[1]));
   let position = -1;
   let ordreOk = true;
   for (const obligatoire of SCRIPTS_OBLIGATOIRES) {
@@ -139,6 +158,7 @@ for (const page of htmls) {
   // Liens et ressources locales
   for (const correspondance of html.matchAll(/(?:href|src)="([^"#][^"]*)"/g)) {
     const cible = correspondance[1];
+    if (/^https?:\/\/(www\.)?bienvenueduc\.com\//i.test(cible)) continue;
     if (/^(https?:|mailto:|tel:|data:|javascript:)/i.test(cible)) {
       if (/^https?:/i.test(cible)) avertir(`${nom} : lien externe → ${cible}`);
       continue;
@@ -148,10 +168,183 @@ for (const page of htmls) {
     if (!existe(propre)) erreur(`${nom} : ressource introuvable → ${cible}`);
   }
 
+  // Versionnement des assets : chaque ?v= doit correspondre au contenu du fichier.
+  for (const correspondance of html.matchAll(/(?:src|href)="(\/?assets\/[^"]+)"/g)) {
+    const reference = correspondance[1];
+    const [chemin, version] = reference.split("?v=");
+    const relatif = chemin.replace(/^\//, "");
+    if (!version) {
+      erreur(`${nom} : ressource non versionnée → ${reference} (lancer npm run versionner)`);
+      versionsOk = false;
+      continue;
+    }
+    if (!existe(relatif)) continue;
+    const attendue = empreinte(relatif);
+    if (version !== attendue) {
+      erreur(`${nom} : version obsolète → ${reference} (attendu ?v=${attendue})`);
+      versionsOk = false;
+      continue;
+    }
+    referencesVersionnees += 1;
+  }
+
   if (/lorem ipsum/i.test(html)) erreur(`${nom} : texte de remplissage « lorem ipsum »`);
 }
 
 if (htmls.length === PAGES.length) ok.push("Les 8 pages attendues sont présentes");
+if (versionsOk && referencesVersionnees > 0) ok.push(`Assets versionnés et à jour (${referencesVersionnees} références)`);
+
+/* -------------------------------------------------------------------------
+   1 bis. Pages autonomes : mentions légales, confidentialité, CGU, 404
+   ------------------------------------------------------------------------- */
+const PAGES_AUTONOMES = ["mentions-legales.html", "confidentialite.html", "cgu.html", "404.html"];
+
+for (const nom of PAGES_AUTONOMES) {
+  if (!existe(nom)) {
+    erreur(`Page autonome manquante : ${nom}`);
+    continue;
+  }
+  const html = lire(nom);
+  let valide = true;
+
+  if (!/^<!DOCTYPE html>/i.test(html.trim())) { erreur(`${nom} : déclaration <!DOCTYPE html> absente`); valide = false; }
+  if (!/<html[^>]+lang="fr"/.test(html)) { erreur(`${nom} : attribut lang="fr" absent`); valide = false; }
+  if (!/<meta[^>]+charset="utf-8"/i.test(html)) { erreur(`${nom} : meta charset utf-8 absent`); valide = false; }
+  if (!/<meta[^>]+name="viewport"/.test(html)) { erreur(`${nom} : meta viewport absent`); valide = false; }
+  if (!/<main[^>]+id="contenu"/.test(html)) { erreur(`${nom} : <main id="contenu"> absent`); valide = false; }
+  if ((html.match(/<h1\b/g) || []).length !== 1) { erreur(`${nom} : une seule balise <h1> attendue`); valide = false; }
+  if (/<title>\s*<\/title>/.test(html)) { erreur(`${nom} : <title> vide`); valide = false; }
+  if (!/SepsHaness/.test(html)) erreur(`${nom} : le nom « SepsHaness » est absent`);
+  if (/lorem ipsum/i.test(html)) erreur(`${nom} : texte de remplissage « lorem ipsum »`);
+
+  for (const correspondance of html.matchAll(/(?:src|href)="(\/?assets\/[^"]+)"/g)) {
+    const reference = correspondance[1];
+    const [chemin, version] = reference.split("?v=");
+    const relatif = chemin.replace(/^\//, "");
+    if (!version) { erreur(`${nom} : ressource non versionnée → ${reference}`); versionsOk = false; continue; }
+    if (!existe(relatif)) { erreur(`${nom} : ressource introuvable → ${chemin}`); valide = false; continue; }
+    if (version !== empreinte(relatif)) { erreur(`${nom} : version obsolète → ${reference}`); versionsOk = false; continue; }
+    referencesVersionnees += 1;
+  }
+
+  // Liens internes des pages autonomes (les chemins absolus sont ceux de la 404).
+  for (const correspondance of html.matchAll(/(?:href|src)="([^"#][^"]*)"/g)) {
+    const cible = correspondance[1];
+    if (/^(https?:|mailto:|tel:|data:|javascript:)/i.test(cible)) continue;
+    if (/^\/?assets\//.test(cible)) continue;
+    const chemin = cible.split("?")[0].split("#")[0].replace(/^\//, "") || "index.html";
+    if (!existe(chemin)) {
+      erreur(`${nom} : lien interne introuvable → ${cible}`);
+      valide = false;
+    }
+  }
+
+  // Servie pour n'importe quelle URL inexistante, la page 404 doit utiliser des chemins absolus.
+  if (nom === "404.html") {
+    for (const correspondance of html.matchAll(/(?:href|src)="(assets\/[^"]*)"/g)) {
+      erreur(`404.html : chemin relatif interdit (la page est servie sous une autre URL) → ${correspondance[1]}`);
+      valide = false;
+    }
+    if (!/<link[^>]+rel="canonical"[^>]+href="https:\/\/bienvenueduc\.com\/404\.html"/.test(html)) {
+      avertir("404.html : canonical attendu vers https://bienvenueduc.com/404.html");
+    }
+  }
+
+  if (valide) ok.push(`${nom} : page autonome conforme`);
+}
+
+// Le pied de page de toutes les pages applicatives renvoie vers les pages légales.
+const APP_JS = lire("assets/js/app.js");
+for (const lien of ["mentions-legales.html", "confidentialite.html", "cgu.html"]) {
+  if (!APP_JS.includes(lien)) erreur(`app.js : lien légal absent du pied de page → ${lien}`);
+}
+if (["mentions-legales.html", "confidentialite.html", "cgu.html"].every((lien) => APP_JS.includes(lien))) {
+  ok.push("Pied de page : liens vers les trois pages légales");
+}
+
+for (const fichier of ["robots.txt", "sitemap.xml", ".htaccess"]) {
+  if (!existe(fichier)) erreur(`Fichier de mise en ligne manquant : ${fichier}`);
+}
+
+/* -------------------------------------------------------------------------
+   1 ter. SEO et mise en ligne : titres, descriptions, canonical, sitemap
+   ------------------------------------------------------------------------- */
+const PAGES_SEO = readdirSync(RACINE).filter((fichier) => fichier.endsWith(".html")).sort();
+const titres = new Map();
+const descriptions = new Map();
+let seoOk = true;
+
+for (const nom of PAGES_SEO) {
+  const html = lire(nom);
+
+  const titre = ((html.match(/<title>([^<]*)<\/title>/i) || [])[1] || "").trim();
+  if (!titre) {
+    erreur(`${nom} : <title> absent`);
+    seoOk = false;
+  } else {
+    if (titre.length > 70) avertir(`${nom} : <title> long (${titre.length} caractères) → ${titre}`);
+    if (titres.has(titre)) {
+      erreur(`${nom} : <title> identique à ${titres.get(titre)}`);
+      seoOk = false;
+    }
+    titres.set(titre, nom);
+  }
+
+  const description = ((html.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || [])[1] || "").trim();
+  if (!description) {
+    erreur(`${nom} : meta description absente`);
+    seoOk = false;
+  } else {
+    if (description.length > 180) avertir(`${nom} : meta description longue (${description.length} caractères)`);
+    if (descriptions.has(description)) {
+      erreur(`${nom} : meta description identique à ${descriptions.get(description)}`);
+      seoOk = false;
+    }
+    descriptions.set(description, nom);
+  }
+
+  // Une page de leçon dépend d'un paramètre ?cours= : pas de canonical statique fiable.
+  if (nom !== "lecon.html" && !/<link[^>]+rel="canonical"/i.test(html)) {
+    erreur(`${nom} : lien canonical absent`);
+    seoOk = false;
+  }
+
+  if (nom === "404.html" && !/<meta[^>]+name="robots"[^>]+noindex/i.test(html)) {
+    erreur("404.html : meta robots noindex absente");
+    seoOk = false;
+  }
+}
+
+if (seoOk) ok.push(`SEO : ${PAGES_SEO.length} pages, titres et descriptions uniques ; canonical présent (hors leçon)`);
+
+// Sitemap : chaque URL déclarée doit correspondre à un fichier du dépôt.
+const SITEMAP = lire("sitemap.xml");
+const urlsDeclarees = [...SITEMAP.matchAll(/<loc>([^<]+)<\/loc>/g)].map((correspondance) => correspondance[1].trim());
+if (!urlsDeclarees.length) erreur("sitemap.xml : aucune URL déclarée");
+for (const url of urlsDeclarees) {
+  if (!/^https:\/\/bienvenueduc\.com\//.test(url)) {
+    erreur(`sitemap.xml : domaine inattendu → ${url}`);
+    continue;
+  }
+  const chemin = url.replace("https://bienvenueduc.com/", "").split("?")[0].split("#")[0] || "index.html";
+  if (!existe(chemin)) erreur(`sitemap.xml : fichier absent du dépôt → ${chemin}`);
+}
+if (urlsDeclarees.length && !erreurs.some((message) => message.startsWith("sitemap.xml"))) {
+  ok.push(`sitemap.xml : ${urlsDeclarees.length} URL valides`);
+}
+
+const ROBOTS = lire("robots.txt");
+if (!/^Sitemap:\s*https:\/\/bienvenueduc\.com\/sitemap\.xml/m.test(ROBOTS)) {
+  erreur("robots.txt : ligne Sitemap absente ou incorrecte");
+} else {
+  ok.push("robots.txt : sitemap déclaré");
+}
+
+const HTACCESS = lire(".htaccess");
+for (const motif of ["ErrorDocument 404 /404.html", "Strict-Transport-Security", "RewriteRule ^ https://bienvenueduc.com%{REQUEST_URI} [L,R=301]"]) {
+  if (!HTACCESS.includes(motif)) erreur(`.htaccess : règle absente → ${motif}`);
+}
+if (HTACCESS.includes("ErrorDocument 404 /404.html")) ok.push(".htaccess : page 404, HTTPS et en-têtes configurés");
 
 /* -------------------------------------------------------------------------
    2. Syntaxe JavaScript
@@ -525,7 +718,7 @@ if (!APP) {
 /* -------------------------------------------------------------------------
    4. Cohérence des fichiers / divers
    ------------------------------------------------------------------------- */
-for (const fichier of ["assets/css/base.css", "assets/css/accueil.css", "assets/css/catalogue.css", "assets/css/perso.css", "assets/img/favicon.svg", "docs/CONTRAT.md", "server.mjs", "README.md"]) {
+for (const fichier of ["assets/css/base.css", "assets/css/accueil.css", "assets/css/catalogue.css", "assets/css/perso.css", "assets/css/legal.css", "assets/img/favicon.svg", "docs/CONTRAT.md", "docs/DEPLOIEMENT.md", "server.mjs", "README.md"]) {
   if (!existe(fichier)) erreur(`Fichier attendu manquant : ${fichier}`);
 }
 

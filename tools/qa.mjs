@@ -40,6 +40,14 @@ const PAGES = [
   { nom: "profil", url: "profil.html" }
 ];
 
+/** Pages autonomes : mesurées, mais sans capture dédiée. */
+const PAGES_SECONDAIRES = [
+  { nom: "mentions-legales", url: "mentions-legales.html" },
+  { nom: "confidentialite", url: "confidentialite.html" },
+  { nom: "cgu", url: "cgu.html" },
+  { nom: "404", url: "404.html" }
+];
+
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const chrome = spawn(
@@ -208,6 +216,18 @@ async function phaseMesuresEtCaptures() {
     captures.push(await capturer("sombre-" + cible.nom, true, 2400));
   }
   await naviguer("index.html?theme=clair");
+}
+
+async function phasePagesSecondaires() {
+  for (const page of PAGES_SECONDAIRES) {
+    for (const ecran of ["desktop", "petit", "mobile"]) {
+      await preparerEcran(ecran);
+      await naviguer(page.url);
+      const mesure = await mesurer();
+      mesure.erreurs = erreursDepuis(evenements);
+      mesures.push({ ecran, page: page.nom, ...mesure });
+    }
+  }
 }
 
 async function phaseInteractions() {
@@ -434,6 +454,7 @@ try {
   await envoyer("Page.enable");
   await envoyer("Runtime.enable");
   await phaseMesuresEtCaptures();
+  await phasePagesSecondaires();
   await phaseInteractions();
 } catch (erreur) {
   console.error("Échec du contrôle navigateur :", erreur.message);
@@ -454,13 +475,13 @@ try {
 if (mesures.length) {
   console.log("");
   console.log("MESURES (débordement horizontal = scrollWidth > innerWidth)");
-  console.log("Écran    | Page           | largeur | scrollWidth | h1 | cartes | en-tête | erreurs JS");
-  console.log("---------|----------------|---------|-------------|----|--------|---------|-----------");
+  console.log("Écran    | Page             | largeur | scrollWidth | h1 | cartes | en-tête | erreurs JS");
+  console.log("---------|------------------|---------|-------------|----|--------|---------|-----------");
   for (const ligne of mesures) {
     console.log(
       [
         ligne.ecran.padEnd(8),
-        ligne.page.padEnd(14),
+        ligne.page.padEnd(16),
         String(ligne.innerWidth).padEnd(7),
         String(ligne.scrollWidth).padEnd(11),
         String(ligne.h1).padEnd(2),

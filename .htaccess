@@ -1,0 +1,93 @@
+# =====================================================================
+#  SepsHaness — configuration Apache / LiteSpeed (Hostinger)
+#  À placer à la racine du site, dans public_html/
+#
+#  AVANT DE REMPLACER : sauvegardez l'éventuel .htaccess existant et
+#  fusionnez ses règles avec celles-ci si Hostinger en impose.
+#  Procédure complète : docs/DEPLOIEMENT.md
+# =====================================================================
+
+Options -Indexes
+AddDefaultCharset UTF-8
+DirectoryIndex index.html
+
+# --------------------------------------------------------------- Adresse
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Une seule adresse canonique : HTTPS sans « www ».
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://bienvenueduc.com%{REQUEST_URI} [L,R=301]
+
+  # Les dossiers de travail ne doivent jamais être servis.
+  RewriteRule ^(tools|docs)(/|$) - [F,L]
+</IfModule>
+
+# --------------------------------------------------------------- Sécurité
+<IfModule mod_headers.c>
+  # HSTS : à n'activer que si tous les sous-domaines sont en HTTPS.
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # La version de PHP n'a aucune raison d'être publique.
+  Header unset X-Powered-By
+</IfModule>
+
+# ------------------------------------------------------------ Page 404
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------- Performance
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript text/javascript application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # HTML : toujours revalidé, pour que les nouvelles versions arrivent tout de suite.
+  ExpiresByType text/html "access plus 0 seconds"
+  # CSS/JS : servis avec ?v=<empreinte> (tools/versionner.mjs) → cache long sans risque.
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  # Images : 30 jours.
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/gif "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  # Polices : 1 an.
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# ----------------------------------------- Fichiers qui ne doivent pas sortir
+<FilesMatch "\.(env|sql|log|ini|bak|old|orig|md|zip|tar|gz|sh|py|mjs)$">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "^(package\.json|package-lock\.json|\.gitignore)$">
+  Require all denied
+</FilesMatch>
+
+<Files ".htaccess">
+  Require all denied
+</Files>
+
+# ------------------------------------------------ Erreurs PHP (production)
+# Décommenter pour masquer les erreurs au public (les logs restent côté serveur).
+# php_flag display_errors off
+# php_value error_log /home/LOGIN/logs/php-error.log

@@ -1,0 +1,23 @@
+# Archives de déploiement générées localement
+dist/
+
+# Dépendances éventuelles
+node_modules/
+
+# Systèmes de fichiers
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Journaux et fichiers temporaires
+*.log
+*.tmp
+*.bak
+
+# Éditeurs
+.idea/
+*.swp
+
+# Fichiers d'environnement (jamais de secrets dans le dépôt)
+.env
+.env.*

@@ -3,11 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "description": "SepsHaness — espace d'apprentissage en français pour les élèves et les étudiants",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bienvenu531/Site-Educatif.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
     "check": "node tools/check.mjs",
-    "test": "node tools/check.mjs"
+    "test": "node tools/check.mjs",
+    "qa": "node tools/qa.mjs",
+    "versionner": "node tools/versionner.mjs",
+    "verifier:prod": "node tools/verifier-prod.mjs",
+    "avant-mise-en-ligne": "npm run versionner && npm test"
   },
   "engines": {
     "node": ">=18"

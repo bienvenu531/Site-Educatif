@@ -1,0 +1,9 @@
+# SepsHaness — bienvenueduc.com
+# Robots : tout le site public est indexable ; les dossiers de travail sont exclus.
+
+User-agent: *
+Allow: /
+Disallow: /tools/
+Disallow: /docs/
+
+Sitemap: https://bienvenueduc.com/sitemap.xml

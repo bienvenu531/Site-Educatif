@@ -1,0 +1,339 @@
+/* ==========================================================================
+   SepsHaness — pages autonomes (mentions légales, confidentialité, CGU, 404)
+   Styles propres à ces pages, préfixés « legal- » ou « err- ».
+   Ne contient aucune couleur en dur : uniquement les jetons de base.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- Structure */
+.legal-entete-site .entete-site__inner {
+  justify-content: space-between;
+}
+
+.legal-page {
+  padding-block: var(--e-7) var(--e-8);
+}
+
+.legal-footer .pied-site__bas a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-footer .pied-site__bas a:hover {
+  color: var(--c-primaire);
+}
+
+.legal-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e-4);
+  margin-bottom: var(--e-6);
+}
+
+.legal-entete__titre {
+  margin: var(--e-2) 0 var(--e-2);
+}
+
+.legal-entete__maj {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--c-texte-faible);
+}
+
+.legal-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: var(--e-6);
+  align-items: start;
+}
+
+.legal-article {
+  padding: clamp(var(--e-5), 3vw, var(--e-7));
+}
+
+.legal-article h2 {
+  margin: var(--e-6) 0 var(--e-3);
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--c-bordure);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  scroll-margin-top: var(--e-7);
+}
+
+.legal-article h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.legal-article h3 {
+  margin: var(--e-5) 0 var(--e-2);
+  font-size: 1.02rem;
+}
+
+.legal-article p {
+  margin: var(--e-3) 0;
+  max-width: var(--largeur-texte);
+}
+
+.legal-article ul,
+.legal-article ol {
+  margin: var(--e-3) 0 var(--e-4);
+  padding-left: 1.3rem;
+  max-width: var(--largeur-texte);
+}
+
+.legal-article li {
+  margin: var(--e-2) 0;
+}
+
+.legal-article li::marker {
+  color: var(--c-primaire);
+}
+
+.legal-article a {
+  color: var(--c-primaire-fonce);
+  text-underline-offset: 3px;
+}
+
+.legal-article a:hover {
+  color: var(--c-primaire);
+}
+
+[data-theme="sombre"] .legal-article a {
+  color: var(--c-primaire);
+}
+
+.legal-article table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: var(--e-3) 0 var(--e-5);
+  font-size: 0.94rem;
+}
+
+.legal-article th:first-child,
+.legal-article td:first-child {
+  width: 26%;
+}
+
+.legal-article th:nth-child(2),
+.legal-article td:nth-child(2) {
+  width: 40%;
+}
+
+.legal-article th:nth-child(3),
+.legal-article td:nth-child(3) {
+  width: 34%;
+}
+
+.legal-article th,
+.legal-article td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--e-3);
+  border-bottom: 1px solid var(--c-bordure);
+  overflow-wrap: anywhere;
+}
+
+.legal-article caption {
+  text-align: left;
+  font-size: 0.86rem;
+  color: var(--c-texte-faible);
+  padding-bottom: var(--e-2);
+}
+
+.legal-article th,
+.legal-article td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--e-3);
+  border-bottom: 1px solid var(--c-bordure);
+}
+
+.legal-article th {
+  background: var(--c-surface-2);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--c-texte-doux);
+}
+
+.legal-article tr:last-child td {
+  border-bottom: 0;
+}
+
+.legal-encadre {
+  margin: var(--e-4) 0;
+  padding: var(--e-4) var(--e-5);
+  border: 1px solid var(--c-bordure);
+  border-left: 4px solid var(--c-primaire);
+  border-radius: var(--rayon-md);
+  background: var(--c-primaire-doux);
+}
+
+.legal-encadre p {
+  margin: var(--e-2) 0;
+}
+
+.legal-sommaire {
+  position: sticky;
+  top: var(--e-5);
+  padding: var(--e-5);
+}
+
+.legal-sommaire h2 {
+  margin: 0 0 var(--e-3);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-texte-faible);
+}
+
+.legal-sommaire ol {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.legal-sommaire li {
+  margin: var(--e-2) 0;
+}
+
+.legal-sommaire a {
+  color: var(--c-texte-doux);
+  text-decoration: none;
+}
+
+.legal-sommaire a:hover {
+  color: var(--c-primaire);
+  text-decoration: underline;
+}
+
+.legal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-6);
+}
+
+/* ------------------------------------------------------------------ 404 */
+.err-page {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 220px);
+  padding-block: var(--e-7);
+}
+
+.err-code {
+  margin: 0;
+  font-size: clamp(4.5rem, 16vw, 9rem);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-primaire);
+}
+
+.err-texte {
+  max-width: 58ch;
+}
+
+.err-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-5);
+}
+
+.err-pistes {
+  margin-top: var(--e-6);
+  padding-top: var(--e-5);
+  border-top: 1px solid var(--c-bordure);
+}
+
+.err-pistes h2 {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-texte-faible);
+}
+
+.err-pistes ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-5);
+  margin: var(--e-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --------------------------------------------------------------- Responsive */
+@media (max-width: 900px) {
+  .legal-grille {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .legal-sommaire {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .legal-page {
+    padding-block: var(--e-6) var(--e-7);
+  }
+
+  .legal-article {
+    padding: var(--e-5);
+  }
+
+  .legal-article h2 {
+    font-size: 1.15rem;
+  }
+
+  .legal-article table {
+    font-size: 0.84rem;
+  }
+
+  .legal-article th,
+  .legal-article td {
+    padding: var(--e-2);
+  }
+
+  .legal-entete {
+    align-items: flex-start;
+  }
+}
+
+/* ---------------------------------------------------------------- Impression */
+@media print {
+  .entete-site,
+  .pied-site,
+  .legal-sommaire,
+  .legal-actions,
+  .err-actions {
+    display: none !important;
+  }
+
+  .legal-page,
+  .err-page {
+    padding: 0;
+  }
+
+  .legal-grille {
+    display: block;
+  }
+
+  .legal-article {
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .legal-article h2 {
+    break-after: avoid;
+  }
+}

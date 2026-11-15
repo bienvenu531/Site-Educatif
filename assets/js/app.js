@@ -564,12 +564,14 @@
       '<a href="parcours.html">Parcours guidés</a><a href="cours.html">Catalogue des cours</a><a href="bibliotheque.html">Bibliothèque</a></div>' +
       '<div class="pied-site__colonne"><h3 class="pied-site__titre">Organiser</h3>' +
       '<a href="espace-travail.html">Espace de travail</a><a href="suivi.html">Suivi de progression</a><a href="profil.html">Mon profil</a></div>' +
-      '<div class="pied-site__colonne"><h3 class="pied-site__titre">Bon à savoir</h3>' +
-      '<p class="petit texte-doux">Progression et notes sont enregistrées uniquement dans votre navigateur.</p>' +
-      '<p class="petit texte-doux">Aucun compte, aucune donnée envoyée sur Internet.</p></div>' +
+      '<div class="pied-site__colonne"><h3 class="pied-site__titre">Informations</h3>' +
+      '<a href="mentions-legales.html">Mentions légales</a>' +
+      '<a href="confidentialite.html">Politique de confidentialité</a>' +
+      '<a href="cgu.html">Conditions d\'utilisation</a></div>' +
       "</div>" +
       '<div class="pied-site__bas"><span>© 2026 SepsHaness — projet pédagogique</span>' +
-      '<span>Fait avec soin, sans publicité.</span></div>' +
+      '<span>Aucun compte · données conservées dans votre navigateur.</span>' +
+      '<span>Hébergé par <a href="https://www.hostinger.fr" rel="noopener" target="_blank">Hostinger International Ltd.</a></span></div>' +
       "</div></footer>";
   }
 

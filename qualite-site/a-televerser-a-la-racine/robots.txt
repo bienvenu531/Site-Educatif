@@ -1,8 +1,0 @@
-# Excellence — bienvenueduc.com
-# Robots : contenu public indexable, API exclue.
-
-User-agent: *
-Allow: /
-Disallow: /api/
-
-Sitemap: https://bienvenueduc.com/sitemap.xml

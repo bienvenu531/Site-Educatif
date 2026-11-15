@@ -35,18 +35,27 @@ Espace sepsHaness/
 ├─ espace-travail.html              PAGES-B
 ├─ suivi.html                       PAGES-B
 ├─ profil.html                      PAGES-B
+├─ mentions-legales.html            LEAD   (page autonome, ajout 15/11/2026)
+├─ confidentialite.html             LEAD   (page autonome, ajout 15/11/2026)
+├─ cgu.html                         LEAD   (page autonome, ajout 15/11/2026)
+├─ 404.html                         LEAD   (page autonome, chemins absolus)
+├─ robots.txt, sitemap.xml          LEAD   (référencement)
+├─ .htaccess                        LEAD   (HTTPS, sécurité, cache, 404)
 ├─ server.mjs                       LEAD
 ├─ README.md                        LEAD
 ├─ docs/CONTRAT.md                  LEAD
+├─ docs/DEPLOIEMENT.md              LEAD   (procédure Hostinger et recette)
 ├─ assets/
 │  ├─ css/
 │  │  ├─ base.css                   LEAD   (design system — NE PAS MODIFIER)
 │  │  ├─ catalogue.css              PAGES-A
-│  │  └─ perso.css                  PAGES-B
+│  │  ├─ perso.css                  PAGES-B
+│  │  └─ legal.css                  LEAD   (pages autonomes)
 │  ├─ js/
 │  │  ├─ markdown.js                LEAD   (mini moteur Markdown)
 │  │  ├─ store.js                   LEAD   (localStorage + API progression)
 │  │  ├─ app.js                     LEAD   (coquille, icônes, helpers, modale, toast)
+│  │  ├─ theme.js                   LEAD   (thème des pages autonomes)
 │  │  ├─ accueil.js                 LEAD
 │  │  ├─ data/core.js               LEAD   (niveaux, matières, parcours, badges, témoignages)
 │  │  ├─ data/cours-stem.js         CONTENU-STEM
@@ -63,6 +72,11 @@ Espace sepsHaness/
 │  │  └─ profil.js                  PAGES-B
 │  └─ img/favicon.svg               LEAD
 └─ tools/ (vérifications)           LEAD
+   ├─ check.mjs
+   ├─ qa.mjs
+   ├─ versionner.mjs
+   ├─ verifier-prod.mjs
+   └─ preparer-zip.ps1
 ```
 
 **Chacun n'écrit que ses fichiers.** Ne jamais modifier un fichier d'un autre propriétaire, ni
