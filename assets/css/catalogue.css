@@ -198,6 +198,262 @@
 /* --------------------------------------------------------------------------
    3. Parcours guidés (parcours.html)
    -------------------------------------------------------------------------- */
+
+/* 3.1 En-tête : présentation et progression personnelle */
+.cat-hero {
+  align-items: center;
+}
+
+.cat-hero__texte {
+  flex: 1 1 520px;
+  min-width: 0;
+}
+
+.cat-hero__texte .entete-page__actions {
+  margin-top: var(--e-5);
+}
+
+.cat-hero__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  max-width: 56ch;
+  margin-top: var(--e-4);
+}
+
+.cat-hero__note .icone {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.cat-hero__panneau {
+  flex: 0 1 372px;
+  min-width: 300px;
+  align-self: stretch;
+  display: flex;
+}
+
+.cat-hero__carte {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--e-3);
+  justify-content: center;
+  padding: var(--e-4) var(--e-5);
+  background: var(--c-surface);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-lg);
+  box-shadow: var(--ombre-1);
+}
+
+.cat-hero__carte-haut {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+}
+
+.cat-hero__carte-texte {
+  min-width: 0;
+}
+
+.cat-hero__chiffre {
+  margin-top: 2px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.cat-anneau {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.cat-anneau svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cat-anneau__texte {
+  position: relative;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.cat-anneau__texte strong {
+  display: block;
+  color: var(--c-texte);
+  font-size: 1.28rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.cat-hero__liste {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: var(--e-3) 0 0;
+  border-top: 1px solid var(--c-bordure);
+  list-style: none;
+}
+
+.cat-hero__liste li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--c-texte-doux);
+  font-size: 0.84rem;
+}
+
+.cat-hero__liste .icone {
+  flex-shrink: 0;
+  color: var(--c-primaire);
+}
+
+/* 3.2 Bandeau « Reprendre » */
+.cat-section-reprendre {
+  padding-block: var(--e-5) 0;
+}
+
+.cat-section-reprendre:not([hidden]) + #cat-section-parcours {
+  padding-top: var(--e-5);
+}
+
+.cat-reprendre__corps .jauge {
+  margin-top: 4px;
+}
+
+/* 3.3 Barre d'outils : recherche, tri et filtres */
+.cat-outils {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  margin-bottom: var(--e-5);
+}
+
+.cat-outils__haut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--e-3);
+}
+
+.cat-recherche {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.cat-recherche .barre-recherche {
+  min-height: 44px;
+}
+
+.cat-recherche input::-webkit-search-cancel-button,
+.cat-recherche input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.cat-recherche__effacer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-texte-doux);
+  flex-shrink: 0;
+  transition: background var(--transition), color var(--transition);
+}
+
+.cat-recherche__effacer:hover {
+  background: var(--c-surface-3);
+  color: var(--c-texte);
+}
+
+.cat-recherche__effacer[hidden] {
+  display: none;
+}
+
+.cat-tri {
+  flex: 0 1 220px;
+  min-width: 190px;
+}
+
+.cat-outils__groupe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+}
+
+.cat-outils__label {
+  flex: 0 0 84px;
+  margin: 0;
+  color: var(--c-texte-faible);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cat-filtre__compte {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: var(--rayon-pilule);
+  background: var(--c-surface-2);
+  color: var(--c-texte-faible);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.puce-filtre[aria-pressed="true"] .cat-filtre__compte {
+  background: transparent;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.cat-outils__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-2);
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
+}
+
+.cat-outils__pied p {
+  margin: 0;
+}
+
+.cat-outils__pied .btn[hidden] {
+  display: none;
+}
+
+.cat-compte {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-pilule);
+  background: var(--c-surface);
+  color: var(--c-texte-doux);
+  font-size: 0.8rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* 3.4 Cartes de parcours */
 .cat-parcours-liste {
   align-items: stretch;
 }
@@ -226,6 +482,10 @@
   opacity: 0.9;
 }
 
+.cat-parcours--cliquable {
+  cursor: pointer;
+}
+
 .cat-parcours:hover {
   transform: translateY(-3px);
   box-shadow: var(--ombre-2);
@@ -235,7 +495,7 @@
 .cat-parcours__haut {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--e-3);
 }
@@ -255,18 +515,64 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--e-2);
 }
 
+.cat-etiquette-niveau {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux, var(--c-surface-2));
+  color: var(--teinte, var(--c-texte-doux));
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .cat-parcours__titre {
-  font-size: 1.18rem;
+  font-size: 1.16rem;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
+.cat-parcours__titre a {
+  color: var(--c-texte);
+}
+
+.cat-parcours__titre a:hover {
+  color: var(--teinte, var(--c-primaire));
+  text-decoration: none;
+}
+
 .cat-parcours__texte {
-  font-size: 0.9rem;
   color: var(--c-texte-doux);
+  font-size: 0.9rem;
+}
+
+.cat-parcours__matieres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cat-matiere-puce {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux, var(--c-surface-2));
+  color: var(--teinte, var(--c-texte-doux));
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.cat-matiere-puce .icone {
+  flex-shrink: 0;
 }
 
 .cat-parcours__pourqui {
@@ -312,6 +618,8 @@
 }
 
 .cat-etape--vide {
+  margin: 0;
+  padding-block: var(--e-3);
   color: var(--c-texte-faible);
   font-size: 0.86rem;
   font-style: italic;
@@ -334,6 +642,16 @@
 .cat-etape--terminee .cat-etape__num {
   background: var(--c-succes-doux);
   color: var(--c-succes);
+}
+
+.cat-etape--suivante .cat-etape__num {
+  background: var(--teinte-doux, var(--c-primaire-doux));
+  color: var(--teinte, var(--c-primaire));
+  box-shadow: inset 0 0 0 2px var(--teinte, var(--c-primaire));
+}
+
+.cat-etape--suivante .cat-etape__titre {
+  color: var(--teinte, var(--c-primaire));
 }
 
 .cat-etape__corps {
@@ -361,13 +679,26 @@
   font-size: 0.76rem;
 }
 
-.cat-etape__statut {
-  display: inline-flex;
-  margin-top: 3px;
-  color: var(--c-succes);
+.cat-etape__repere {
+  align-self: center;
   flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux, var(--c-primaire-doux));
+  color: var(--teinte, var(--c-primaire));
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
+.cat-etape__repere--encours {
+  background: var(--c-info-doux);
+  color: var(--c-info);
+}
+
+/* Pied de carte : progression segmentée */
 .cat-parcours__pied {
   display: flex;
   flex-direction: column;
@@ -383,12 +714,146 @@
   gap: 6px;
 }
 
+.cat-segments {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  height: 6px;
+}
+
+.cat-segments__part {
+  border-radius: var(--rayon-pilule);
+  background: var(--c-surface-3);
+}
+
+.cat-segments__part--faite {
+  background: var(--teinte, var(--c-primaire));
+}
+
+.cat-segments__part--suivante {
+  background: var(--teinte-doux, var(--c-primaire-doux));
+  box-shadow: inset 0 0 0 1px var(--teinte, var(--c-primaire));
+}
+
 .cat-parcours__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--e-2);
+}
+
+/* 3.5 Note sur les données locales */
+.cat-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  margin-top: var(--e-5);
+  padding: var(--e-4) var(--e-5);
+  background: var(--c-surface);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-lg);
+}
+
+.cat-note__icone {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--rayon-sm);
+  background: var(--c-info-doux);
+  color: var(--c-info);
+  flex-shrink: 0;
+}
+
+.cat-note__corps {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cat-note h3 {
+  font-size: 0.98rem;
+}
+
+.cat-note p {
+  max-width: 78ch;
+}
+
+.cat-note__liens {
+  gap: var(--e-4);
+  margin-top: 2px;
+}
+
+/* 3.6 Programme détaillé (modale) */
+.cat-programme {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.cat-programme__meta {
+  gap: var(--e-2) var(--e-3);
+}
+
+.cat-programme__texte {
+  color: var(--c-texte-doux);
+  font-size: 0.94rem;
+}
+
+.cat-programme__bloc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.cat-programme__bloc h3 {
+  font-size: 0.98rem;
+  color: var(--c-texte-doux);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cat-programme__etapes {
+  border-top: 0;
+}
+
+.cat-documents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+}
+
+.cat-document-lien {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-sm);
+  background: var(--c-surface);
+  color: var(--c-texte-doux);
+  font-size: 0.82rem;
+}
+
+.cat-document-lien:hover {
+  border-color: var(--c-primaire);
+  color: var(--c-primaire);
+  text-decoration: none;
+}
+
+.cat-document-lien .micro {
+  color: var(--c-texte-faible);
+}
+
+.cat-programme__actions {
+  display: flex;
   justify-content: flex-end;
   gap: var(--e-2);
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
 }
 
 /* --------------------------------------------------------------------------
@@ -407,13 +872,10 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  margin: 0;
   color: var(--c-texte-doux);
   font-size: 0.86rem;
   line-height: 1.5;
-}
-
-.cat-points li + li {
-  margin-top: 0;
 }
 
 .cat-points .icone {
@@ -422,9 +884,49 @@
   color: var(--c-succes);
 }
 
+.cat-niveau {
+  height: 100%;
+}
+
+.cat-niveau .carte-niveau__haut > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-niveau__pct {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--rayon-pilule);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cat-niveau__progression {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-niveau__progression p {
+  margin: 0;
+}
+
+.cat-niveau__pied {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  margin-top: auto;
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--c-bordure);
+}
+
 .cat-matieres-niveau {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
   gap: var(--e-2);
 }
 
@@ -446,12 +948,198 @@
 
 .cat-tuile-texte .tuile-matiere__nom,
 .cat-tuile-texte .tuile-matiere__detail {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
-.cat-niveau__lien {
-  align-self: flex-start;
-  margin-top: auto;
+/* Cartes de matières */
+.cat-matiere {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: var(--e-4);
+  background: var(--c-surface);
+  border: 1px solid var(--c-bordure);
+  border-radius: var(--rayon-md);
+  color: var(--c-texte);
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.cat-matiere:hover {
+  color: var(--c-texte);
+  text-decoration: none;
+  border-color: var(--teinte, var(--c-primaire));
+  transform: translateY(-2px);
+  box-shadow: var(--ombre-1);
+}
+
+.cat-matiere__haut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cat-matiere__icone {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--rayon-sm);
+  background: var(--teinte-doux);
+  color: var(--teinte);
+}
+
+.cat-matiere__pct {
+  color: var(--teinte);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.cat-matiere__nom {
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.cat-matiere__detail {
+  color: var(--c-texte-faible);
+  font-size: 0.78rem;
+}
+
+.cat-matiere__parcours {
+  color: var(--c-texte-faible);
+  font-size: 0.74rem;
+}
+
+.cat-matiere__jauge {
+  display: block;
+  margin-top: 2px;
+}
+
+@media (max-width: 1080px) {
+  .cat-hero__panneau {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .cat-hero__carte,
+  .cat-parcours,
+  .cat-note,
+  .cat-outils {
+    padding: var(--e-4);
+  }
+}
+
+@media (max-width: 720px) {
+  .cat-hero {
+    align-items: flex-start;
+  }
+
+  .cat-hero__panneau {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .cat-outils__haut {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cat-recherche {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .cat-tri {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cat-outils__label {
+    flex-basis: 100%;
+  }
+
+  .cat-outils__pied {
+    align-items: flex-start;
+  }
+
+  .cat-parcours__etiquettes {
+    justify-content: flex-start;
+  }
+
+  .cat-parcours__actions {
+    justify-content: flex-start;
+  }
+
+  .cat-parcours__actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .cat-note {
+    align-items: flex-start;
+  }
+
+  .cat-note__liens {
+    gap: var(--e-3);
+  }
+
+  .cat-programme__actions .btn {
+    width: 100%;
+  }
+
+  .cat-matieres-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .cat-hero__carte-haut {
+    gap: var(--e-3);
+  }
+
+  .cat-anneau {
+    width: 84px;
+    height: 84px;
+  }
+
+  .cat-anneau__texte strong {
+    font-size: 1.1rem;
+  }
+
+  .cat-matieres-niveau {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cat-matieres-niveau .tuile-matiere {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .cat-matieres-niveau .tuile-matiere__icone {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cat-matieres-niveau .tuile-matiere__nom {
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .cat-matieres-niveau .tuile-matiere__detail {
+    font-size: 0.72rem;
+  }
+
+  .cat-etape {
+    gap: 9px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cat-matieres-liste {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -684,8 +1372,7 @@
     padding: var(--e-4);
   }
 
-  .cat-doc,
-  .cat-parcours {
+  .cat-doc {
     padding: var(--e-4);
   }
 }
@@ -736,10 +1423,6 @@
     width: 100%;
   }
 
-  .cat-parcours__actions {
-    justify-content: flex-start;
-  }
-
   .cat-doc__haut {
     align-items: flex-start;
   }
@@ -750,10 +1433,6 @@
 }
 
 @media (max-width: 420px) {
-  .cat-matieres-niveau {
-    grid-template-columns: 1fr;
-  }
-
   .cat-doc__pied {
     align-items: flex-start;
   }

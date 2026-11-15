@@ -22,8 +22,9 @@ et les étudiants (université). Fonctionnalités :
 Le site est **100 % statique**, sans dépendance externe, sans build, sans CDN : HTML + CSS + JavaScript
 vanilla, données en fichiers JS, persistance en `localStorage`. Il doit fonctionner en ouvrant
 `index.html` (`file://`) **et** via le petit serveur `node server.mjs`.
-Un pré-rendu optionnel (`tools/prerendre.mjs`) écrit le catalogue dans le HTML avant déploiement ;
-il ne change rien au fonctionnement ni à l'absence de build au runtime.
+Un pré-rendu (`tools/prerendre.mjs`) écrit le catalogue dans le HTML et génère une page HTML complète
+par leçon (`lecon-<slug>.html`, contenu, `canonical` et balisage `Course`) avant déploiement ; il ne
+change rien au fonctionnement ni à l'absence de build au runtime.
 
 ## 2. Arborescence et propriétaires
 
@@ -34,6 +35,7 @@ Espace sepsHaness/
 ├─ cours.html                       PAGES-A
 ├─ bibliotheque.html                PAGES-A
 ├─ lecon.html                       PAGES-B
+├─ lecon-<slug>.html                GÉNÉRÉ  (19 pages de leçon pré-rendues, ne pas éditer)
 ├─ espace-travail.html              PAGES-B
 ├─ suivi.html                       PAGES-B
 ├─ profil.html                      PAGES-B
@@ -69,6 +71,7 @@ Espace sepsHaness/
 │  │  ├─ cours.js                   PAGES-A
 │  │  ├─ bibliotheque.js            PAGES-A
 │  │  ├─ lecon.js                   PAGES-B
+│  │  ├─ lecon-vue.js               LEAD   (rendu des leçons, partagé avec le pré-rendu)
 │  │  ├─ espace-travail.js          PAGES-B
 │  │  ├─ suivi.js                   PAGES-B
 │  │  └─ profil.js                  PAGES-B
@@ -85,9 +88,15 @@ Espace sepsHaness/
 **Chacun n'écrit que ses fichiers.** Ne jamais modifier un fichier d'un autre propriétaire, ni
 `base.css`, `app.js`, `store.js`, `markdown.js`, `data.js`, `data/core.js`, `index.html`.
 
-**Pré-rendu :** les blocs entre `<!-- prerendu:debut -->` et `<!-- prerendu:fin -->` de `cours.html`
-et `bibliotheque.html` sont générés par `tools/prerendre.mjs`. Ne pas les modifier à la main :
-modifier les données puis lancer `npm run prerendre`.
+**Pré-rendu :** `tools/prerendre.mjs` génère trois choses, qu'il ne faut jamais modifier à la main :
+
+- les blocs `<!-- prerendu:debut -->` … `<!-- prerendu:fin -->` de `cours.html` et `bibliotheque.html` ;
+- les 19 pages `lecon-<slug>.html`, une par cours, avec le même rendu que le navigateur
+  (`assets/js/lecon-vue.js`) ;
+- le bloc `<!-- lecons:debut -->` … `<!-- lecons:fin -->` de `sitemap.xml`.
+
+Modifier les données dans `assets/js/data/*.js`, puis lancer `npm run prerendre` (ou
+`npm run avant-mise-en-ligne`).
 
 ## 3. Conventions de code
 
@@ -334,6 +343,28 @@ code inline, blocs de code, listes, tableaux, citations, liens, séparateurs.
 Total attendu : **19 cours, 12 documents**, sur les matières : `mathematiques`, `francais`,
 `sciences`, `histoire-geo`, `informatique`, `philosophie`, `economie`, `langues`.
 
+### 6.4 Parcours guidés
+
+```js
+{
+  id: "parcours-reussir-college",
+  titre: "Réussir le collège",
+  description: "…",                     // 2 phrases, angle du parcours
+  niveau: "college",                    // id de niveau
+  teinte: "indigo",                     // teinte du design system
+  icone: "livre",                       // icône de App.icon
+  duree: "2 h 30",                      // libellé indicatif (la durée réelle est recalculée)
+  rythme: "4 séances de 35 à 40 min",   // facultatif : rythme conseillé
+  pourQui: "…",                         // facultatif : public visé
+  objectifs: ["…", "…", "…"],           // facultatif : compétences visées
+  cours: ["math-college-fractions", "…"] // 2 cours minimum, slugs existants, ordre conseillé
+}
+```
+
+`APP_DATA.parcoursAvecCours()` résout `cours` en objets cours (`etapes`), calcule `dureeTotale` et
+transmet `rythme` et `objectifs`. `store.js` calcule la progression à partir de ces étapes : ne pas
+réimplémenter les règles dans la page.
+
 ## 7. `Store` — persistance et progression (`assets/js/store.js`)
 
 État persisté sous la clé `sepshaness.v1`. API (toutes synchrones) :
@@ -403,7 +434,7 @@ App.toast(message, {type:"succes"|"info"|"erreur"})
 App.modal({titre, contenu, actions:[{libelle, type, onClick, fermer}], taille:"md"|"lg"})
 App.fermerModal() / App.modalOuverte()
 App.confirmer({titre, message, libelleOk, libelleAnnuler}) -> Promise<bool>
-App.lienCours(slug) / App.lienDocument(id)   // "lecon.html?cours=…" / "bibliotheque.html?doc=…"
+App.lienCours(slug) / App.lienDocument(id)   // "lecon-<slug>.html" / "bibliotheque.html?doc=…"
 App.param(nom)                    // valeur du paramètre d'URL
 App.onReady(fn)                   // DOMContentLoaded déjà géré
 App.vider(racine) / App.vide(texte)  // état vide standard
@@ -440,10 +471,11 @@ Utilisation : `element.innerHTML = App.icon("livre")` ou `<span data-icon="livre
 | page | `data-page` | paramètres d'URL | contenu attendu |
 |---|---|---|---|
 | index.html | accueil | — | hero, chiffres, niveaux, cours phares, fonctionnalités, étapes, documents, témoignages, appel à l'action |
-| parcours.html | parcours | `?niveau=` (facultatif) | parcours guidés + niveaux + matières + progression; filtre par niveau |
+| parcours.html | parcours | `?niveau=` `?q=` `?statut=` `?tri=` (facultatifs) | parcours guidés filtrables (niveau, avancement, recherche, tri), reprise personnalisée, programme détaillé en modale, niveaux et matières avec progression |
 | cours.html | cours | `?matiere=` `?niveau=` `?q=` `?tri=` | recherche instantanée, filtres, tri, grille de cours, état vide, « continuer » |
 | bibliotheque.html | bibliotheque | `?doc=` `?type=` `?matiere=` `?q=` | grille de documents, filtres, lecteur en modale (`?doc=id`), actions (marquer lu, copier, imprimer) |
-| lecon.html | lecon | `?cours=slug` | fil d'Ariane, titre, méta, objectifs, sections rendues, quiz interactif noté, marquer terminé, cours liés, navigation précédent/suivant |
+| lecon.html | lecon | `?cours=slug` | vue interactive historique, **noindex** (doublon technique des pages pré-rendues) : fil d'Ariane, titre, méta, objectifs, sections, quiz interactif noté, marquer terminé, cours liés, navigation |
+| lecon-<slug>.html | lecon | — (`data-cours` fixe le cours) | page **générée** par `tools/prerendre.mjs` : contenu complet dans le HTML (objectifs, sections, quiz sans réponses, documents, cours liés), canonical, JSON-LD `Course` ; devient interactive au chargement du JavaScript |
 | espace-travail.html | espace-travail | `?onglet=notes|taches|planning|minuteur|objectifs` | notes CRUD, tâches CRUD + filtres, planning semaine, minuteur Pomodoro, objectifs |
 | suivi.html | suivi | — | indicateurs, progression par matière, graphique 7 jours, temps par matière, historique sessions/quiz, badges, objectif hebdo |
 | profil.html | profil | — | profil éditable, niveau, objectif hebdo, préférences (thème), export/import JSON, réinitialisation avec confirmation |
@@ -461,6 +493,8 @@ réimplémenter les règles.
 4. Aucun fichier d'un autre propriétaire modifié (`git status` si dépôt).
 5. Contenu 100 % français, sans faute, sans texte de remplissage type « lorem ipsum ».
 6. Rapport final : fichiers créés, choix faits, points à vérifier.
+7. `npm test` passe : pré-rendu à jour (catalogue, 19 leçons pré-rendues, sitemap), assets versionnés,
+   liens internes et données cohérents.
 
 ## 13. Définition de « terminé »
 

@@ -45,7 +45,8 @@ const PAGES_SECONDAIRES = [
   { nom: "mentions-legales", url: "mentions-legales.html" },
   { nom: "confidentialite", url: "confidentialite.html" },
   { nom: "cgu", url: "cgu.html" },
-  { nom: "404", url: "404.html" }
+  { nom: "404", url: "404.html" },
+  { nom: "lecon-statique", url: "lecon-math-college-fractions.html" }
 ];
 
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -298,8 +299,8 @@ async function phaseInteractions() {
   const modaleFermee = await evaluer(`!document.querySelector(".modale")`);
   noterInteraction("Bibliothèque — fermeture avec Échap", modaleFermee, "");
 
-  /* --- Leçon : quiz puis marquage terminé --- */
-  await naviguer("lecon.html?cours=math-college-fractions");
+  /* --- Leçon pré-rendue : quiz puis marquage terminé --- */
+  await naviguer("lecon-math-college-fractions.html");
   const groupesQuiz = await executer(`
     const noms = [...new Set([...document.querySelectorAll('input[type="radio"]')].map((input) => input.name))];
     noms.forEach((nom) => {

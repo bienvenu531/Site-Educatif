@@ -609,7 +609,7 @@
       '<span class="carte-cours__icone" aria-hidden="true">' + icone(matiere.icone, { taille: 22 }) + "</span>" +
       '<span class="carte-cours__niveau">' + escape(niveau.nom) + (cours.classe ? " · " + escape(cours.classe) : "") + "</span>" +
       "</div>" +
-      '<h3 class="carte-cours__titre"><a href="lecon.html?cours=' + encodeURIComponent(cours.slug) + '">' + escape(cours.titre) + "</a></h3>" +
+      '<h3 class="carte-cours__titre"><a href="' + escape(lienCours(cours.slug)) + '">' + escape(cours.titre) + "</a></h3>" +
       '<p class="carte-cours__resume">' + escape(cours.resume || "") + "</p>" +
       '<div class="carte-cours__meta">' +
       '<span class="puce">' + icone("horloge", { taille: 14 }) + escape(duree(cours.duree)) + "</span>" +
@@ -649,8 +649,10 @@
     }
   }
 
+  /** Page pré-rendue de la leçon (générée par tools/prerendre.mjs). */
   function lienCours(slug) {
-    return "lecon.html?cours=" + encodeURIComponent(slug || "");
+    if (!slug) return "cours.html";
+    return "lecon-" + encodeURIComponent(slug) + ".html";
   }
 
   function lienDocument(id) {

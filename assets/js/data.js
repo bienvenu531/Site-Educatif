@@ -252,6 +252,8 @@
         icone: p.icone,
         duree: p.duree,
         pourQui: p.pourQui,
+        rythme: p.rythme || "",
+        objectifs: tableau(p.objectifs),
         etapes: etapes,
         dureeTotale: etapes.reduce(function (total, c) {
           return total + (Number(c.duree) || 0);

@@ -20,7 +20,8 @@ npm run avant-mise-en-ligne
 
 Cette commande :
 
-1. régénère le catalogue statique de `cours.html` et `bibliotheque.html` (`tools/prerendre.mjs`) ;
+1. régénère le catalogue statique (`cours.html`, `bibliotheque.html`), les 19 pages
+   `lecon-<slug>.html` et le bloc des leçons de `sitemap.xml` (`tools/prerendre.mjs`) ;
 2. met à jour les paramètres `?v=` des pages HTML (`tools/versionner.mjs`) ;
 3. lance le contrôle complet (`tools/check.mjs`) : structure, liens, versions, pré-rendu, syntaxe JS,
    données, `Store`, pages légales, SEO.
@@ -43,6 +44,7 @@ npm run qa           # dans un autre : responsive, erreurs console, captures
 | Fichier | Rôle |
 |---|---|
 | `index.html`, `parcours.html`, `cours.html`, `bibliotheque.html`, `lecon.html`, `espace-travail.html`, `suivi.html`, `profil.html` | pages de l'application |
+| `lecon-<slug>.html` (19 fichiers) | pages de leçon pré-rendues, générées par `tools/prerendre.mjs` |
 | `mentions-legales.html`, `confidentialite.html`, `cgu.html` | pages légales |
 | `404.html` | page d'erreur personnalisée |
 | `robots.txt`, `sitemap.xml` | référencement |
@@ -56,7 +58,7 @@ Un ZIP prêt à téléverser peut être généré à tout moment :
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/preparer-zip.ps1
 ```
 
-Il produit `dist/site-a-televerser.zip` (39 entrées, environ 185 Ko), avec les chemins en `/`,
+Il produit `dist/site-a-televerser.zip` (60 entrées, environ 325 Ko), avec les chemins en `/`,
 le `.htaccess` inclus et sans `tools/`, `docs/`, `server.mjs`, `package.json` ni `README.md`.
 Le script vérifie lui-même la présence du `.htaccess` et du dossier `assets/`.
 
@@ -151,7 +153,8 @@ npm run verifier:prod
 
 Le script `tools/verifier-prod.mjs` contrôle :
 
-- les 12 pages (dont légales et 404) ;
+- les 13 pages contrôlées (dont légales, 404 et page de leçon pré-rendue), plus les 29 URL du
+  sitemap ;
 - la page 404 réellement servie pour une URL inconnue ;
 - `robots.txt`, `sitemap.xml` et les URL qu'il déclare ;
 - les en-têtes de sécurité et l'absence de `X-Powered-By` ;
@@ -193,9 +196,9 @@ Aucune donnée utilisateur n'est concernée : tout est local au navigateur du vi
 
 | Situation | Action |
 |---|---|
-| Modification d'un cours ou d'un document (`assets/js/data/*.js`) | `npm run avant-mise-en-ligne` (le catalogue pré-rendu est régénéré), envoyer, purger le cache |
-| Modification de `app.js`, `store.js`, CSS | idem : le `?v=` change, les navigateurs prennent la nouvelle version |
-| Modification d'une page HTML | envoyer la page ; elle est en `no-cache`. Pour `cours.html` ou `bibliotheque.html`, passer par `npm run prerendre` |
+| Modification d'un cours ou d'un document (`assets/js/data/*.js`) | `npm run avant-mise-en-ligne` (catalogue, leçons et sitemap régénérés), envoyer, purger le cache |
+| Modification de `app.js`, `store.js`, `lecon-vue.js`, CSS | idem : le `?v=` change, les navigateurs prennent la nouvelle version |
+| Modification d'une page HTML | envoyer la page ; elle est en `no-cache`. Pour `cours.html`, `bibliotheque.html`, `lecon-<slug>.html` ou `sitemap.xml`, passer par `npm run prerendre` |
 | Ajout d'une page | l'ajouter aussi à `sitemap.xml` et, si publique, vérifier `robots.txt` |
 
 Le numéro de version des assets n'est jamais saisi à la main : il est calculé à partir du contenu.

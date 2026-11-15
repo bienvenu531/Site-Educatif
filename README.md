@@ -14,9 +14,13 @@ Dépôt : [github.com/bienvenu531/Site-Educatif](https://github.com/bienvenu531/
 
 ## Fonctionnalités
 
-- **Parcours** par niveau (primaire, collège, lycée, université) et par matière, avec progression.
+- **Parcours guidés** : 7 itinéraires par niveau, avec reprise personnalisée, recherche, filtres,
+  progression détaillée et programme complet de chaque parcours.
 - **Catalogue pré-rendu** : les 19 cours et 12 documents sont présents dans le HTML (lecture sans
   JavaScript, indexation), puis enrichis par les filtres et le suivi côté navigateur.
+- **Une page par leçon** : chaque cours a sa page `lecon-<slug>.html` (titre et description propres,
+  `canonical`, balisage `Course`), entièrement lisible sans JavaScript ; le quiz, la progression et
+  le marquage « terminé » s'activent au chargement.
 - **Cours** complets : objectifs, sections rédigées, encadrés, exemples, tableaux, quiz corrigé et
   expliqué.
 - **Bibliothèque** de documents (fiches, méthodes, formulaires, protocoles, cartes mentales,
@@ -30,6 +34,10 @@ Dépôt : [github.com/bienvenu531/Site-Educatif](https://github.com/bienvenu531/
 Le catalogue compte **19 cours**, **12 documents** et **76 questions de quiz**, répartis sur
 4 niveaux et 8 matières (mathématiques, français, sciences, histoire-géographie, informatique,
 philosophie, économie, langues).
+
+Côté référencement, les 19 leçons ont chacune une **URL propre** (`/lecon-math-college-fractions.html`,
+par exemple), déclarée dans `sitemap.xml` ; la vue historique `lecon.html?cours=…` reste disponible
+mais est en `noindex`.
 
 ---
 
@@ -71,7 +79,7 @@ navigateur.
 | `npm start` | serveur de développement local |
 | `npm test` / `npm run check` | pré-rendu à jour + contrôle complet (structure, liens, versions, JS, données, Store, pages légales, SEO) |
 | `npm run qa` | contrôle navigateur (Chrome/CDP) : desktop 1440, mobile 390/360, erreurs console, captures dans `docs/apercus/` |
-| `npm run prerendre` | régénère le catalogue statique dans `cours.html` et `bibliotheque.html` |
+| `npm run prerendre` | régénère le catalogue statique, les 19 pages `lecon-<slug>.html` et le sitemap |
 | `npm run versionner` | recalcule les paramètres `?v=` des assets dans les pages HTML |
 | `npm run avant-mise-en-ligne` | pré-rendu, versionnement puis contrôle complet : à lancer avant chaque déploiement |
 | `npm run verifier:prod` | vérifie le site en ligne (pages, 404, sécurité, cache CDN, fraîcheur des assets) |
@@ -89,6 +97,7 @@ surchargé avec `CHROME_PATH`, l'adresse avec `BASE_URL`.
 ```text
 .
 ├─ *.html                    8 pages de l'application + 3 pages légales + 404
+├─ lecon-<slug>.html         19 pages de leçon pré-rendues (générées, ne pas éditer)
 ├─ .htaccess                 HTTPS, en-têtes de sécurité, cache, page 404
 ├─ robots.txt, sitemap.xml   référencement
 ├─ server.mjs                serveur statique de développement (sans dépendance)
@@ -100,6 +109,7 @@ surchargé avec `CHROME_PATH`, l'adresse avec `BASE_URL`.
 │     ├─ app.js              coquille : en-tête, pied de page, icônes, modale, toast
 │     ├─ store.js            persistance localStorage, progression, badges
 │     ├─ markdown.js         moteur Markdown (rendu sûr)
+│     ├─ lecon-vue.js        rendu des leçons, partagé navigateur / pré-rendu
 │     └─ <page>.js           logique de chaque page
 ├─ docs/
 │  ├─ CONTRAT.md             contrat technique : design system, données, API
@@ -136,17 +146,18 @@ npm run avant-mise-en-ligne
 ```
 
 Puis suivez [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md). `npm run avant-mise-en-ligne` régénère
-aussi le catalogue statique (`cours.html`, `bibliotheque.html`) et les versions `?v=` ; les fichiers
-`assets/` doivent être envoyés avec leur nouvelle version, sans quoi le CDN continuerait de servir
-l'ancienne.
+aussi le catalogue statique (`cours.html`, `bibliotheque.html`), les 19 pages `lecon-<slug>.html`,
+le sitemap et les versions `?v=` ; les fichiers `assets/` doivent être envoyés avec leur nouvelle
+version, sans quoi le CDN continuerait de servir l'ancienne.
 
 ---
 
 ## Qualité
 
-- `npm test` vérifie le pré-rendu, la structure des pages, les liens et ressources, la syntaxe des
-  18 fichiers JS, l'intégrité du catalogue (19 cours, 12 documents, 76 questions), le rendu
-  Markdown, l'API du `Store`, le SEO et la conformité des pages légales.
+- `npm test` vérifie le pré-rendu (catalogue, 19 pages de leçon, sitemap), la structure des pages,
+  les liens et ressources, la syntaxe des 19 fichiers JS, l'intégrité du catalogue (19 cours,
+  12 documents, 76 questions), le contenu, le canonical et le JSON-LD des leçons, le rendu Markdown,
+  l'API du `Store`, le SEO et la conformité des pages légales.
 - `npm run qa` mesure les débordements horizontaux, collecte les erreurs console et teste les
   interactions principales (filtres, lecteur, quiz, espace de travail, profil).
 - `npm run verifier:prod` contrôle le site réellement servi : en-têtes, redirections, 404, sitemap

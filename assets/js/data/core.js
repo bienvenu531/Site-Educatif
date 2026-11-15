@@ -137,7 +137,13 @@
       teinte: "amber",
       icone: "crayon",
       duree: "1 h 20",
+      rythme: "3 séances de 25 à 30 min",
       pourQui: "Élèves de CM1 et CM2, parents qui accompagnent les devoirs",
+      objectifs: [
+        "Lire un récit court et en dégager les informations essentielles.",
+        "Comparer, ranger et calculer avec des nombres décimaux.",
+        "Reconnaître les trois états de la matière dans des situations du quotidien."
+      ],
       cours: ["fra-primaire-lecture", "math-primaire-decimaux", "sci-primaire-etats-matiere"]
     },
     {
@@ -149,7 +155,14 @@
       teinte: "indigo",
       icone: "livre",
       duree: "2 h 30",
+      rythme: "4 séances de 35 à 40 min",
       pourQui: "Élèves de 6e à la 3e qui veulent des bases solides",
+      objectifs: [
+        "Simplifier, comparer et additionner des fractions.",
+        "Repérer le sujet, le verbe et les compléments d'une phrase.",
+        "Expliquer le rôle de la cellule et de ses organites.",
+        "Situer les grandes étapes de la Révolution française et leurs effets."
+      ],
       cours: ["math-college-fractions", "fra-college-analyse-phrase", "sci-college-cellule", "hg-college-revolution"]
     },
     {
@@ -161,7 +174,14 @@
       teinte: "violet",
       icone: "trophee",
       duree: "3 h 15",
+      rythme: "4 séances de 45 à 55 min",
       pourQui: "Élèves de 1re et de Terminale en voie générale",
+      objectifs: [
+        "Relier une fonction affine à sa droite et à son coefficient directeur.",
+        "Construire une dissertation : problématique, plan et transitions.",
+        "Analyser les grandes phases de la guerre froide.",
+        "Problématiser la notion de conscience et l'illustrer par des exemples."
+      ],
       cours: ["math-lycee-fonctions-affines", "fra-lycee-dissertation", "hg-lycee-guerre-froide", "philo-lycee-conscience"]
     },
     {
@@ -173,7 +193,13 @@
       teinte: "cyan",
       icone: "code",
       duree: "2 h 30",
+      rythme: "3 séances de 40 à 60 min",
       pourQui: "Curieux du code, élèves de 4e, étudiants de L1 et L2",
+      objectifs: [
+        "Décrire un algorithme simple avec des instructions, des tests et des boucles.",
+        "Écrire et exécuter un programme Python qui manipule des données.",
+        "Modéliser une base de données et écrire des requêtes SQL."
+      ],
       cours: ["info-college-algorithmique", "info-lycee-python", "info-univ-bases-donnees"]
     },
     {
@@ -184,8 +210,14 @@
       niveau: "universite",
       teinte: "teal",
       icone: "etude",
-      duree: "3 h 00",
+      duree: "2 h 45",
+      rythme: "3 séances de 50 à 60 min",
       pourQui: "Étudiants de L1 et L2 en lettres, économie, informatique",
+      objectifs: [
+        "Construire une argumentation universitaire claire et sourcée.",
+        "Analyser les arbitrages d'un consommateur avec les outils microéconomiques.",
+        "Interroger une base de données relationnelle avec SQL."
+      ],
       cours: ["fra-univ-argumentation", "eco-univ-microeconomie", "info-univ-bases-donnees"]
     },
     {
@@ -196,9 +228,33 @@
       niveau: "lycee",
       teinte: "rose",
       icone: "monde",
-      duree: "2 h 10",
+      duree: "2 h 00",
+      rythme: "3 séances de 30 à 55 min",
       pourQui: "Élèves de 5e, 1re, et toute personne qui veut écrire mieux",
+      objectifs: [
+        "Employer le présent simple avec les bonnes marques de personne et de temps.",
+        "Analyser la structure d'une phrase pour améliorer son expression.",
+        "Organiser une dissertation en trois parties argumentées."
+      ],
       cours: ["ang-college-present-simple", "fra-college-analyse-phrase", "fra-lycee-dissertation"]
+    },
+    {
+      id: "parcours-energie-decider",
+      titre: "L'énergie : mesurer, modéliser, décider",
+      description:
+        "Trois cours complémentaires pour comprendre l'énergie, la quantifier et éclairer les choix économiques qui l'entourent.",
+      niveau: "lycee",
+      teinte: "orange",
+      icone: "courbe",
+      duree: "2 h 10",
+      rythme: "3 séances de 40 à 45 min",
+      pourQui: "Élèves de 2de et 1re intéressés par les sciences, l'économie et les enjeux climatiques",
+      objectifs: [
+        "Exploiter une relation linéaire pour lire et représenter des données.",
+        "Calculer une énergie et une puissance, puis comparer des consommations.",
+        "Comprendre comment l'offre et la demande déterminent un prix."
+      ],
+      cours: ["math-lycee-fonctions-affines", "sci-lycee-energie", "eco-lycee-marche"]
     }
   ];
 

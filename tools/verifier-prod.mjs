@@ -81,6 +81,7 @@ const PAGES = [
   "/cours.html",
   "/bibliotheque.html",
   "/lecon.html?cours=math-college-fractions",
+  "/lecon-math-college-fractions.html",
   "/espace-travail.html",
   "/suivi.html",
   "/profil.html",

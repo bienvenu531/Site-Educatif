@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Parcours — SepsHaness</title>
-  <meta name="description" content="Parcours guidés de SepsHaness : des itinéraires de cours par niveau, avec étapes détaillées, progression enregistrée et matières à explorer." />
+  <title>Parcours guidés — SepsHaness</title>
+  <meta name="description" content="Des parcours guidés du primaire à l'université : un objectif, des cours complémentaires et une progression enregistrée. Choisissez votre itinéraire et avancez pas à pas." />
   <link rel="canonical" href="https://bienvenueduc.com/parcours.html" />
   <link rel="icon" href="assets/img/favicon.svg?v=ee034208" />
   <link rel="stylesheet" href="assets/css/base.css?v=287c3487" />
-  <link rel="stylesheet" href="assets/css/catalogue.css?v=28000c8f" />
+  <link rel="stylesheet" href="assets/css/catalogue.css?v=24167d59" />
 </head>
 <body data-page="parcours">
   <div id="app-header"></div>
@@ -21,54 +21,122 @@
           <span class="fil-ariane__separateur" aria-hidden="true">/</span>
           <span aria-current="page">Parcours</span>
         </nav>
-        <div class="entete-page__inner">
-          <div>
+        <div class="entete-page__inner cat-hero">
+          <div class="cat-hero__texte">
             <span class="surtitre">Apprendre pas à pas</span>
             <h1 class="entete-page__titre">Des parcours guidés pour progresser</h1>
             <p class="entete-page__texte">
-              Choisissez un itinéraire, suivez les étapes dans l'ordre et gardez la trace de ce que vous
-              avez terminé. Chaque parcours réunit des cours complémentaires pour un niveau donné, du
-              primaire à l'université.
+              Un objectif, plusieurs cours complémentaires et un ordre conseillé. Suivez les étapes,
+              gardez la trace de ce que vous avez terminé et reprenez à tout moment là où vous en étiez,
+              du primaire à l'université.
+            </p>
+            <div class="entete-page__actions">
+              <a class="btn btn--primaire" href="#cat-section-parcours">
+                <span aria-hidden="true" data-icon="parcours" data-taille="18"></span>
+                Explorer les parcours
+              </a>
+              <a class="btn btn--secondaire" href="cours.html">
+                <span aria-hidden="true" data-icon="livre" data-taille="18"></span>
+                Catalogue des cours
+              </a>
+            </div>
+            <p class="micro texte-faible cat-hero__note">
+              <span aria-hidden="true" data-icon="info" data-taille="15"></span>
+              <span>Aucun compte à créer : votre progression est conservée dans ce navigateur.</span>
             </p>
           </div>
-          <div class="entete-page__actions">
-            <a class="btn btn--primaire" href="cours.html">
-              <span aria-hidden="true" data-icon="livre" data-taille="18"></span>
-              Catalogue des cours
-            </a>
-            <a class="btn btn--secondaire" href="bibliotheque.html">
-              <span aria-hidden="true" data-icon="bibliotheque" data-taille="18"></span>
-              Bibliothèque
-            </a>
-          </div>
+          <aside class="cat-hero__panneau" id="cat-hero-progression" aria-label="Votre progression dans les parcours"></aside>
         </div>
       </div>
     </div>
 
-    <div class="cat-bandeau-filtres">
-      <div class="conteneur cat-bandeau-filtres__inner">
-        <h2 class="cat-filtres__label" id="cat-titre-filtre-niveau">Filtrer par niveau</h2>
-        <div class="filtres" id="cat-filtres-niveau" role="group" aria-labelledby="cat-titre-filtre-niveau"></div>
-      </div>
-    </div>
-
-    <section class="section" aria-labelledby="cat-titre-parcours">
+    <section class="section cat-section-reprendre" id="cat-section-reprendre" aria-labelledby="cat-titre-reprendre" hidden>
       <div class="conteneur">
-        <div class="section__entete">
-          <div>
-            <h2 class="section__titre" id="cat-titre-parcours">Parcours guidés</h2>
-            <p class="section__texte">
-              Un objectif, plusieurs cours, une progression lisible. Ouvrez une étape à tout moment :
-              votre avancement est conservé dans ce navigateur.
-            </p>
-          </div>
-          <p class="petit texte-doux" id="cat-compte-parcours" aria-live="polite"></p>
-        </div>
-        <div class="grille grille--2 cat-parcours-liste" id="cat-parcours-liste"></div>
+        <h2 class="sr-only" id="cat-titre-reprendre">Reprendre un parcours</h2>
+        <div id="cat-reprendre-zone"></div>
       </div>
     </section>
 
-    <section class="section section--alt" aria-labelledby="cat-titre-niveaux">
+    <section class="section" id="cat-section-parcours" aria-labelledby="cat-titre-parcours">
+      <div class="conteneur">
+        <div class="section__entete">
+          <div>
+            <h2 class="section__titre" id="cat-titre-parcours">Choisissez votre itinéraire</h2>
+            <p class="section__texte">
+              Chaque parcours réunit des cours d'un même niveau autour d'un objectif clair. Ouvrez une
+              étape à tout moment : votre avancement est mis à jour et conservé dans ce navigateur.
+            </p>
+          </div>
+          <p class="cat-compte" id="cat-compte-parcours" aria-live="polite"></p>
+        </div>
+
+        <div class="panneau cat-outils">
+          <div class="cat-outils__haut">
+            <div class="barre-recherche cat-recherche">
+              <span aria-hidden="true" data-icon="recherche" data-taille="19"></span>
+              <label class="sr-only" for="cat-recherche">Rechercher un parcours</label>
+              <input type="search" id="cat-recherche" placeholder="Rechercher un parcours…" autocomplete="off" />
+              <button class="cat-recherche__effacer" type="button" id="cat-effacer-recherche" aria-label="Effacer la recherche" hidden>
+                <span aria-hidden="true" data-icon="croix" data-taille="16"></span>
+              </button>
+            </div>
+            <div class="champ cat-tri">
+              <label class="champ__label" for="cat-tri">Trier par</label>
+              <select class="liste-deroulante" id="cat-tri">
+                <option value="conseille">Ordre conseillé</option>
+                <option value="progression">Progression</option>
+                <option value="duree">Durée croissante</option>
+                <option value="titre">Titre A → Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cat-outils__groupe">
+            <p class="cat-outils__label" id="cat-label-niveau">Niveau</p>
+            <div class="filtres" id="cat-filtres-niveau" role="group" aria-labelledby="cat-label-niveau"></div>
+          </div>
+
+          <div class="cat-outils__groupe">
+            <p class="cat-outils__label" id="cat-label-statut">Avancement</p>
+            <div class="filtres" id="cat-filtres-statut" role="group" aria-labelledby="cat-label-statut"></div>
+          </div>
+
+          <div class="cat-outils__pied">
+            <p class="petit texte-doux" id="cat-resume-filtres" aria-live="polite"></p>
+            <button class="btn btn--fantome btn--sm" type="button" id="cat-reinitialiser" hidden>
+              <span aria-hidden="true" data-icon="reinitialiser" data-taille="16"></span>
+              Effacer les filtres
+            </button>
+          </div>
+        </div>
+
+        <div class="grille grille--2 cat-parcours-liste" id="cat-parcours-liste"></div>
+
+        <aside class="cat-note" aria-labelledby="cat-note-titre">
+          <span class="cat-note__icone" aria-hidden="true" data-icon="info" data-taille="20"></span>
+          <div class="cat-note__corps">
+            <h3 id="cat-note-titre">Votre progression reste dans ce navigateur</h3>
+            <p class="petit texte-doux">
+              Les étapes terminées, les scores de quiz et le temps d'étude sont enregistrés localement,
+              sans compte ni serveur. Vous pouvez consulter vos statistiques ou exporter vos données à
+              tout moment.
+            </p>
+            <div class="rangee cat-note__liens">
+              <a class="lien-fleche" href="suivi.html">
+                Voir mon suivi
+                <span aria-hidden="true" data-icon="fleche-droite" data-taille="15"></span>
+              </a>
+              <a class="lien-fleche" href="profil.html">
+                Gérer mes données
+                <span aria-hidden="true" data-icon="fleche-droite" data-taille="15"></span>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="cat-section-niveaux" aria-labelledby="cat-titre-niveaux">
       <div class="conteneur">
         <div class="section__entete">
           <div>
@@ -83,13 +151,14 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="cat-titre-matieres">
+    <section class="section" id="cat-section-matieres" aria-labelledby="cat-titre-matieres">
       <div class="conteneur">
         <div class="section__entete">
           <div>
             <h2 class="section__titre" id="cat-titre-matieres">Toutes les matières</h2>
             <p class="section__texte">
               Huit matières, des cours pour tous les niveaux et des documents de révision associés.
+              Suivez ici votre progression matière par matière.
             </p>
           </div>
           <a class="btn btn--secondaire" href="cours.html">
@@ -97,22 +166,36 @@
             Voir tout le catalogue
           </a>
         </div>
-        <div class="grille grille--4" id="cat-liste-matieres"></div>
+        <div class="grille grille--4 cat-matieres-liste" id="cat-liste-matieres"></div>
       </div>
     </section>
+
+    <noscript>
+      <div class="section">
+        <div class="conteneur">
+          <div class="boite-info">
+            <p>
+              Les parcours guidés s'affichent avec JavaScript. Vous pouvez d'ores et déjà
+              <a href="cours.html">parcourir le catalogue des cours</a> ou
+              <a href="bibliotheque.html">ouvrir la bibliothèque de documents</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </noscript>
   </main>
 
   <div id="app-footer"></div>
 
   <script src="assets/js/markdown.js?v=ca271143"></script>
-  <script src="assets/js/data/core.js?v=7c35e6f7"></script>
+  <script src="assets/js/data/core.js?v=cd00e2ec"></script>
   <script src="assets/js/data/cours-stem.js?v=9a6a9e65"></script>
   <script src="assets/js/data/cours-lettres.js?v=a00329df"></script>
   <script src="assets/js/data/documents-stem.js?v=0b0a1aa8"></script>
   <script src="assets/js/data/documents-lettres.js?v=d7187583"></script>
-  <script src="assets/js/data.js?v=12da6905"></script>
+  <script src="assets/js/data.js?v=1700bfb8"></script>
   <script src="assets/js/store.js?v=6e51c506"></script>
-  <script src="assets/js/app.js?v=3ffbe550"></script>
-  <script src="assets/js/parcours.js?v=be6e849e"></script>
+  <script src="assets/js/app.js?v=66034466"></script>
+  <script src="assets/js/parcours.js?v=df5ac074"></script>
 </body>
 </html>

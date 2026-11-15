@@ -44,6 +44,16 @@ function sansVersion(url) {
   return url.split("?")[0];
 }
 
+/** Échappement identique à App.escape, pour retrouver un texte dans le HTML généré. */
+function echapperHtml(texte) {
+  return String(texte == null ? "" : texte)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const empreintes = new Map();
 
 /** Début du SHA-256 d'un fichier, tel qu'utilisé par tools/versionner.mjs. */
@@ -649,6 +659,124 @@ if (!APP) {
     });
   }
   if (APP.parcours && APP.parcours.length) ok.push(`${APP.parcours.length} parcours cohérents`);
+
+  /* ---- Leçons pré-rendues : le contenu doit être dans le HTML ---- */
+  const fichiersLecons = cours.map((c) => "lecon-" + encodeURIComponent(c.slug) + ".html");
+  const pagesLecons = readdirSync(RACINE).filter((fichier) => /^lecon-.+\.html$/.test(fichier));
+  const leconsManquantes = fichiersLecons.filter((fichier) => !existe(fichier));
+  const leconsOrphelines = pagesLecons.filter((fichier) => !fichiersLecons.includes(fichier));
+  if (leconsManquantes.length) {
+    erreur(`Leçons pré-rendues manquantes (${leconsManquantes.length}) : ${leconsManquantes.join(", ")}`);
+  }
+  if (leconsOrphelines.length) {
+    erreur(`Pages de leçon sans cours (${leconsOrphelines.length}) : ${leconsOrphelines.join(", ")}`);
+  }
+
+  let leconsValides = 0;
+  for (const c of cours) {
+    const fichier = "lecon-" + encodeURIComponent(c.slug) + ".html";
+    if (!existe(fichier)) continue;
+    const html = lire(fichier);
+    let valide = true;
+    const souci = (message) => {
+      erreur(`${fichier} : ${message}`);
+      valide = false;
+    };
+
+    if (!/^<!DOCTYPE html>/i.test(html.trim())) souci("déclaration <!DOCTYPE html> absente");
+    if (!/<html[^>]+lang="fr"/.test(html)) souci('attribut lang="fr" absent');
+    if (!/<meta[^>]+charset="utf-8"/i.test(html)) souci("meta charset utf-8 absent");
+    if (!/<meta[^>]+name="viewport"/.test(html)) souci("meta viewport absent");
+    if (!/<main[^>]+id="contenu"/.test(html)) souci('<main id="contenu"> absent');
+    if (!/<div[^>]+id="app-header"/.test(html)) souci("#app-header absent");
+    if (!/<div[^>]+id="app-footer"/.test(html)) souci("#app-footer absent");
+    if (!/data-page="lecon"/.test(html)) souci('data-page="lecon" absent');
+    if (!new RegExp('data-cours="' + c.slug + '"').test(html)) souci(`data-cours="${c.slug}" absent`);
+    if ((html.match(/<h1\b/g) || []).length !== 1) souci("une seule balise <h1> attendue");
+    if (!/<noscript>/.test(html)) souci("repli <noscript> absent");
+
+    const canonical = `<link rel="canonical" href="https://bienvenueduc.com/${fichier}" />`;
+    if (!html.includes(canonical)) souci(`canonical attendu → ${canonical}`);
+
+    // Données structurées Course
+    const blocJson = (html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/) || [])[1];
+    if (!blocJson) {
+      souci("données structurées (JSON-LD) absentes");
+    } else {
+      try {
+        const donnees = JSON.parse(blocJson);
+        if (donnees["@type"] !== "Course") souci('JSON-LD : "@type": "Course" attendu');
+        if (donnees.name !== c.titre) souci("JSON-LD : name différent du titre du cours");
+        if (donnees.url !== `https://bienvenueduc.com/${fichier}`) souci("JSON-LD : url incohérente");
+        if (donnees.inLanguage !== "fr") souci('JSON-LD : inLanguage "fr" attendu');
+      } catch (lecture) {
+        souci(`JSON-LD illisible (${lecture.message})`);
+      }
+    }
+
+    // Contenu réellement présent sans JavaScript
+    const sections = c.sections || [];
+    const sectionsRendues = (html.match(/<section class="perso-section"/g) || []).length;
+    if (sectionsRendues !== sections.length) souci(`${sectionsRendues} sections rendues pour ${sections.length} attendues`);
+    const quiz = c.quiz || [];
+    const questionsRendues = (html.match(/<fieldset class="perso-question"/g) || []).length;
+    if (questionsRendues !== quiz.length) souci(`${questionsRendues} questions rendues pour ${quiz.length} attendues`);
+    const sectionAbsente = sections.find((section) => !html.includes(echapperHtml(section.titre)));
+    if (sectionAbsente) souci(`titre de section absent du HTML → ${sectionAbsente.titre}`);
+    if (!html.includes(echapperHtml(c.titre))) souci("titre du cours absent du HTML");
+    if (/perso-option--bonne/.test(html)) souci("la bonne réponse est révélée dans le HTML statique");
+
+    // Scripts et assets
+    const scripts = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => sansVersion(m[1]));
+    for (const obligatoire of SCRIPTS_OBLIGATOIRES) {
+      if (!scripts.includes(obligatoire)) souci(`script obligatoire manquant → ${obligatoire}`);
+    }
+    const positionVue = scripts.indexOf("assets/js/lecon-vue.js");
+    const positionLecon = scripts.indexOf("assets/js/lecon.js");
+    if (positionVue === -1) souci("script manquant → assets/js/lecon-vue.js");
+    else if (positionLecon === -1) souci("script manquant → assets/js/lecon.js");
+    else if (positionVue > positionLecon) souci("lecon-vue.js doit précéder lecon.js");
+    if (scripts.some((script) => /^(https?:)?\/\//.test(script))) souci("script externe détecté (interdit)");
+
+    for (const correspondance of html.matchAll(/(?:src|href)="(\/?assets\/[^"]+)"/g)) {
+      const reference = correspondance[1];
+      const [chemin, version] = reference.split("?v=");
+      const relatif = chemin.replace(/^\//, "");
+      if (!version) souci(`ressource non versionnée → ${reference}`);
+      else if (!existe(relatif)) souci(`ressource introuvable → ${chemin}`);
+      else if (version !== empreinte(relatif)) souci(`version obsolète → ${reference}`);
+    }
+
+    for (const correspondance of html.matchAll(/(?:href|src)="([^"#][^"]*)"/g)) {
+      const cible = correspondance[1];
+      if (/^https?:\/\/(www\.)?bienvenueduc\.com\//i.test(cible)) continue;
+      if (/^(https?:|mailto:|tel:|data:|javascript:)/i.test(cible)) continue;
+      const propre = cible.split("?")[0].split("#")[0];
+      if (!propre || propre.startsWith("/")) continue;
+      if (!existe(propre)) souci(`lien interne introuvable → ${cible}`);
+    }
+
+    if (valide) leconsValides += 1;
+  }
+
+  if (!leconsManquantes.length && !leconsOrphelines.length && leconsValides === cours.length) {
+    ok.push(`${cours.length} leçons pré-rendues conformes (contenu, canonical, JSON-LD, assets)`);
+  }
+
+  const leconDynamique = lire("lecon.html");
+  if (!/<meta[^>]+name="robots"[^>]+content="noindex/i.test(leconDynamique)) {
+    erreur('lecon.html : meta robots « noindex » attendue (page dynamique, doublon des pages pré-rendues)');
+  } else {
+    ok.push("lecon.html : noindex présent (les pages pré-rendues restent la référence)");
+  }
+
+  const scriptsLecon = [...leconDynamique.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => sansVersion(m[1]));
+  const positionVueLecon = scriptsLecon.indexOf("assets/js/lecon-vue.js");
+  if (positionVueLecon === -1) {
+    erreur("lecon.html : script manquant → assets/js/lecon-vue.js");
+  } else if (positionVueLecon > scriptsLecon.indexOf("assets/js/lecon.js")) {
+    erreur("lecon.html : lecon-vue.js doit précéder lecon.js");
+  }
 
   /* ---- Markdown ---- */
   const MD = contexte.MD;
