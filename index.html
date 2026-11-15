@@ -3,35 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SepsHaness — Apprendre, s'organiser, progresser</title>
-  <meta name="description" content="SepsHaness : cours et documents pour les élèves et les étudiants, du primaire à l'université. Un espace de travail et un suivi de progression intégrés." />
-  <meta name="theme-color" content="#4b52d6" />
+  <title>SepsHaness — Le plaisir d'apprendre, du primaire à l'université</title>
+  <meta name="description" content="Des cours clairs, des documents à réviser et un espace de travail qui garde le fil, du primaire à l'université. Sans compte ni publicité : tout reste dans votre navigateur." />
+  <meta name="theme-color" content="#070b1e" />
   <link rel="canonical" href="https://bienvenueduc.com/" />
   <link rel="icon" href="assets/img/favicon.svg?v=ee034208" />
   <link rel="stylesheet" href="assets/css/base.css?v=287c3487" />
-  <link rel="stylesheet" href="assets/css/accueil.css?v=694db3c9" />
+  <link rel="stylesheet" href="assets/css/accueil.css?v=39cbc9ca" />
 </head>
 <body data-page="accueil">
   <div id="app-header"></div>
 
   <main id="contenu">
     <!-- ================= HERO ================= -->
-    <section class="hero">
+    <section class="hero" aria-labelledby="accueil-titre">
+      <div class="hero__fond" aria-hidden="true">
+        <img src="assets/img/accueil-fond.svg?v=1697c18c" alt="" width="1600" height="1000" fetchpriority="high" />
+      </div>
+
       <div class="conteneur hero__inner">
         <div class="hero__texte">
-          <span class="surtitre">Apprendre, s'organiser, progresser</span>
-          <h1 class="hero__titre">Un espace clair pour apprendre, du primaire à l'université.</h1>
+          <p class="hero__eyebrow">
+            <span class="hero__eyebrow-point" aria-hidden="true"></span>
+            Cours · Documents · Suivi — 100 % gratuit
+          </p>
+          <h1 class="hero__titre" id="accueil-titre">
+            Le plaisir d'apprendre,
+            <span class="hero__accent">du primaire à l'université.</span>
+          </h1>
           <p class="hero__accroche">
-            Des cours structurés, des documents prêts à consulter, un espace de travail pour
-            vos notes et un suivi qui montre réellement vos progrès. Sans compte, sans publicité :
-            tout reste dans votre navigateur.
+            Des cours clairs, des fiches prêtes à réviser et un espace de travail qui garde le fil.
+            Sans compte, sans publicité : tout reste dans votre navigateur.
           </p>
           <div class="hero__actions">
-            <a class="btn btn--primaire btn--lg" href="cours.html">
+            <a class="btn btn--accueil btn--lg" href="cours.html">
               <span data-icon="livre" data-taille="19"></span>
-              Découvrir les cours
+              Explorer les cours
+              <span data-icon="fleche-droite" data-taille="17"></span>
             </a>
-            <a class="btn btn--secondaire btn--lg" href="bibliotheque.html">
+            <a class="btn btn--accueil-fantome btn--lg" href="bibliotheque.html">
               <span data-icon="bibliotheque" data-taille="19"></span>
               Ouvrir la bibliothèque
             </a>
@@ -39,11 +49,12 @@
           <ul class="hero__points">
             <li><span data-icon="check" data-taille="16"></span> 4 niveaux, 8 matières</li>
             <li><span data-icon="check" data-taille="16"></span> Quiz corrigés et expliqués</li>
-            <li><span data-icon="check" data-taille="16"></span> Progression enregistrée localement</li>
+            <li><span data-icon="check" data-taille="16"></span> Sans compte, sans publicité</li>
           </ul>
         </div>
 
         <div class="hero__visuel" aria-hidden="true">
+          <div class="hero__halo"></div>
           <div class="apercu">
             <div class="apercu__barre">
               <span class="apercu__point"></span>
@@ -69,7 +80,7 @@
                   <small>de série</small>
                 </div>
                 <div class="apercu__mini">
-                  <span data-icon="trophee" data-taille="16"></span>
+                  <span data-icon="cible" data-taille="16"></span>
                   <strong>84 %</strong>
                   <small>aux quiz</small>
                 </div>
@@ -93,31 +104,54 @@
               </div>
             </div>
           </div>
+
+          <div class="hero__badge hero__badge--serie">
+            <span class="hero__badge-icone" data-icon="feu" data-taille="17"></span>
+            <div><strong>5 jours</strong><small>de série</small></div>
+          </div>
+          <div class="hero__badge hero__badge--quiz">
+            <span class="hero__badge-icone" data-icon="cible" data-taille="17"></span>
+            <div><strong>84 %</strong><small>aux quiz</small></div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ================= CHIFFRES ================= -->
-    <section class="accueil-chiffres" aria-label="Le site en chiffres">
+    <section class="accueil-chiffres" id="accueil-chiffres" aria-label="Le site en chiffres">
       <div class="conteneur">
-        <div class="chiffres" id="accueil-chiffres"></div>
+        <div class="chiffres" id="accueil-chiffres-liste"></div>
+      </div>
+    </section>
+
+    <!-- ================= MATIÈRES ================= -->
+    <section class="accueil-matieres" aria-labelledby="accueil-matieres-titre">
+      <div class="conteneur accueil-matieres__inner">
+        <div class="accueil-matieres__entete">
+          <h2 class="accueil-matieres__titre" id="accueil-matieres-titre">8 matières, un même élan</h2>
+          <a class="lien-fleche petit" href="cours.html">
+            Explorer par matière
+            <span data-icon="fleche-droite" data-taille="16"></span>
+          </a>
+        </div>
+        <div class="accueil-matieres__liste" id="accueil-matieres"></div>
       </div>
     </section>
 
     <!-- ================= REPRISE ================= -->
-    <section class="section" id="accueil-reprise" hidden>
+    <section class="section accueil-reprise-section" id="accueil-reprise" hidden>
       <div class="conteneur" id="accueil-reprise-contenu"></div>
     </section>
 
     <!-- ================= NIVEAUX ================= -->
-    <section class="section">
+    <section class="section accueil-section accueil-section--niveaux">
       <div class="conteneur">
         <div class="section__entete">
           <div>
-            <span class="surtitre">Parcours par niveau</span>
-            <h2 class="section__titre">Choisissez votre point de départ</h2>
+            <span class="surtitre">Parcours guidés</span>
+            <h2 class="section__titre">Votre point de départ</h2>
             <p class="section__texte">
-              Chaque niveau propose des cours adaptés, avec des objectifs explicites, des exemples
+              Chaque niveau réunit des cours adaptés, avec des objectifs explicites, des exemples
               guidés et des quiz pour vérifier que tout est acquis.
             </p>
           </div>
@@ -126,20 +160,20 @@
             <span data-icon="fleche-droite" data-taille="17"></span>
           </a>
         </div>
-        <div class="grille grille--4" id="accueil-niveaux"></div>
+        <div class="grille grille--4 accueil-niveaux" id="accueil-niveaux"></div>
       </div>
     </section>
 
     <!-- ================= COURS EN VEDETTE ================= -->
-    <section class="section section--alt">
+    <section class="section section--alt accueil-section accueil-section--cours">
       <div class="conteneur">
         <div class="section__entete">
           <div>
             <span class="surtitre">À découvrir</span>
             <h2 class="section__titre">Un cours pour chaque niveau</h2>
             <p class="section__texte">
-              Des leçons de 25 à 60 minutes, pensées pour être suivies d'une traite et
-              révisées grâce aux fiches liées.
+              Des leçons de 25 à 60 minutes, pensées pour être suivies d'une traite et révisées
+              grâce aux fiches liées.
             </p>
           </div>
           <a class="btn btn--secondaire" href="cours.html">
@@ -147,27 +181,28 @@
             <span data-icon="fleche-droite" data-taille="17"></span>
           </a>
         </div>
-        <div class="grille grille--auto" id="accueil-cours"></div>
+        <div class="grille grille--auto accueil-cours" id="accueil-cours"></div>
       </div>
     </section>
 
     <!-- ================= FONCTIONNALITÉS ================= -->
-    <section class="section">
+    <section class="section accueil-section accueil-section--outils">
       <div class="conteneur">
         <div class="section__entete">
           <div>
             <span class="surtitre">Trois outils complémentaires</span>
             <h2 class="section__titre">Apprendre ne s'arrête pas à la leçon</h2>
             <p class="section__texte">
-              Consulter, organiser, mesurer : le site réunit ce qui se passe avant, pendant et
-              après le temps d'étude.
+              Consulter, organiser, mesurer : le site réunit ce qui se passe avant, pendant et après
+              le temps d'étude.
             </p>
           </div>
         </div>
 
-        <div class="grille grille--3">
+        <div class="grille grille--3 accueil-outils">
           <article class="accueil-outil" data-teinte="cyan">
-            <div class="carte__icone"><span data-icon="bibliotheque" data-taille="22"></span></div>
+            <div class="accueil-outil__icone" aria-hidden="true"><span data-icon="bibliotheque" data-taille="24"></span></div>
+            <span class="accueil-outil__num">01</span>
             <h3 class="titre-3">Bibliothèque de documents</h3>
             <p class="texte-doux petit">
               Fiches de révision, méthodes d'examen, formulaires, protocoles, cartes mentales et
@@ -181,7 +216,8 @@
           </article>
 
           <article class="accueil-outil" data-teinte="indigo">
-            <div class="carte__icone"><span data-icon="espace" data-taille="22"></span></div>
+            <div class="accueil-outil__icone" aria-hidden="true"><span data-icon="espace" data-taille="24"></span></div>
+            <span class="accueil-outil__num">02</span>
             <h3 class="titre-3">Espace de travail</h3>
             <p class="texte-doux petit">
               Notes prises en cours, tâches à faire, planning de la semaine, objectifs et minuteur
@@ -194,7 +230,8 @@
           </article>
 
           <article class="accueil-outil" data-teinte="emerald">
-            <div class="carte__icone"><span data-icon="suivi" data-taille="22"></span></div>
+            <div class="accueil-outil__icone" aria-hidden="true"><span data-icon="suivi" data-taille="24"></span></div>
+            <span class="accueil-outil__num">03</span>
             <h3 class="titre-3">Suivi de progression</h3>
             <p class="texte-doux petit">
               Cours terminés, temps d'étude par matière, série de jours, scores aux quiz et badges :
@@ -210,7 +247,7 @@
     </section>
 
     <!-- ================= ÉTAPES ================= -->
-    <section class="section section--alt">
+    <section class="section section--alt accueil-section accueil-section--methode">
       <div class="conteneur">
         <div class="section__entete">
           <div>
@@ -231,16 +268,16 @@
             <span class="accueil-etape__numero">2</span>
             <h3 class="titre-4">Travailler avec les outils</h3>
             <p class="petit texte-doux">
-              Suivez le cours, consultez la fiche liée, notez l'essentiel dans votre espace de travail
-              et organisez vos révisions dans le planning.
+              Suivez le cours, consultez la fiche liée, notez l'essentiel dans votre espace de
+              travail et organisez vos révisions dans le planning.
             </p>
           </li>
           <li class="accueil-etape">
             <span class="accueil-etape__numero">3</span>
             <h3 class="titre-4">Mesurer et ajuster</h3>
             <p class="petit texte-doux">
-              Le quiz corrige vos réponses, le suivi enregistre le temps passé et les cours terminés.
-              Vous savez quoi revoir, sans deviner.
+              Le quiz corrige vos réponses, le suivi enregistre le temps passé et les cours
+              terminés. Vous savez quoi revoir, sans deviner.
             </p>
           </li>
         </ol>
@@ -248,15 +285,15 @@
     </section>
 
     <!-- ================= DOCUMENTS ================= -->
-    <section class="section">
+    <section class="section accueil-section accueil-section--documents">
       <div class="conteneur">
         <div class="section__entete">
           <div>
             <span class="surtitre">Bibliothèque</span>
             <h2 class="section__titre">Des documents prêts à l'emploi</h2>
             <p class="section__texte">
-              À consulter avant un contrôle, à imprimer pour réviser ou à garder ouvert pendant
-              les devoirs.
+              À consulter avant un contrôle, à imprimer pour réviser ou à garder ouvert pendant les
+              devoirs.
             </p>
           </div>
           <a class="btn btn--secondaire" href="bibliotheque.html">
@@ -264,40 +301,26 @@
             <span data-icon="fleche-droite" data-taille="17"></span>
           </a>
         </div>
-        <div class="grille grille--3" id="accueil-documents"></div>
-      </div>
-    </section>
-
-    <!-- ================= TÉMOIGNAGES ================= -->
-    <section class="section section--alt">
-      <div class="conteneur">
-        <div class="section__entete">
-          <div>
-            <span class="surtitre">Retours d'usage</span>
-            <h2 class="section__titre">Comment l'espace est utilisé</h2>
-          </div>
-        </div>
-        <div class="grille grille--3" id="accueil-temoignages"></div>
-        <p class="micro texte-faible mt-4">
-          Retours d'usage présentés à titre d'exemple pour ce projet de démonstration.
-        </p>
+        <div class="grille grille--3 accueil-documents" id="accueil-documents"></div>
       </div>
     </section>
 
     <!-- ================= APPEL À L'ACTION ================= -->
-    <section class="section">
+    <section class="section accueil-section-cta" id="accueil-commencer">
       <div class="conteneur">
         <div class="accueil-cta">
-          <div>
-            <h2 class="titre-2">Prêt à commencer ?</h2>
-            <p class="plomb">
+          <img class="accueil-cta__fond" src="assets/img/accueil-fond.svg?v=1697c18c" alt="" aria-hidden="true" />
+          <div class="accueil-cta__contenu">
+            <span class="accueil-cta__surtitre">Votre prochain chapitre</span>
+            <h2 class="accueil-cta__titre">Commencez aujourd'hui, progressez à votre rythme.</h2>
+            <p class="accueil-cta__texte">
               Choisissez un cours, travaillez à votre rythme et laissez le suivi faire le reste.
               Votre progression est conservée automatiquement sur cet appareil.
             </p>
-          </div>
-          <div class="groupe-btn">
-            <a class="btn btn--primaire btn--lg" href="cours.html">Commencer un cours</a>
-            <a class="btn btn--secondaire btn--lg" href="espace-travail.html">Ouvrir mon espace</a>
+            <div class="accueil-cta__actions">
+              <a class="btn btn--accueil btn--lg" href="cours.html">Commencer un cours</a>
+              <a class="btn btn--accueil-fantome btn--lg" href="espace-travail.html">Ouvrir mon espace</a>
+            </div>
           </div>
         </div>
       </div>
@@ -315,6 +338,6 @@
   <script src="assets/js/data.js?v=12da6905"></script>
   <script src="assets/js/store.js?v=6e51c506"></script>
   <script src="assets/js/app.js?v=3ffbe550"></script>
-  <script src="assets/js/accueil.js?v=6ef2888f"></script>
+  <script src="assets/js/accueil.js?v=639db2a4"></script>
 </body>
 </html>

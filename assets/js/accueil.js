@@ -6,7 +6,7 @@
   "use strict";
 
   function rendreChiffres() {
-    var cible = App.qs("#accueil-chiffres");
+    var cible = App.qs("#accueil-chiffres-liste");
     if (!cible || !window.APP_DATA) return;
     var compteur = APP_DATA.compter();
     var donnees = [
@@ -24,6 +24,25 @@
           "<div><span class=\"chiffre__valeur\">" + App.nombre(element.valeur) + "</span>" +
           '<span class="chiffre__libelle">' + App.escape(element.libelle) + "</span></div>" +
           "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function rendreMatieres() {
+    var cible = App.qs("#accueil-matieres");
+    if (!cible || !window.APP_DATA) return;
+
+    cible.innerHTML = APP_DATA.matieres
+      .map(function (matiere) {
+        var nombre = APP_DATA.coursDeMatiere(matiere.id).length;
+        return (
+          '<a class="accueil-matiere" data-teinte="' + matiere.teinte + '" href="cours.html?matiere=' +
+          encodeURIComponent(matiere.id) + '">' +
+          '<span class="accueil-matiere__icone" aria-hidden="true">' + App.icon(matiere.icone, { taille: 16 }) + "</span>" +
+          "<span>" + App.escape(matiere.nom) + "</span>" +
+          '<span class="accueil-matiere__compte" aria-label="' + nombre + " cours\">" + nombre + "</span>" +
+          "</a>"
         );
       })
       .join("");
@@ -171,39 +190,26 @@
       .join("");
   }
 
-  function rendreTemoignages() {
-    var cible = App.qs("#accueil-temoignages");
-    if (!cible || !window.APP_DATA) return;
+  function preparerEntete() {
+    var entete = App.qs(".entete-site");
+    if (!entete) return;
 
-    var liste = APP_DATA.temoignages || [];
-    if (!liste.length) {
-      cible.parentNode.hidden = true;
-      return;
+    function majEntete() {
+      entete.classList.toggle("entete-site--solide", window.scrollY > 40);
     }
 
-    cible.innerHTML = liste
-      .map(function (temoignage) {
-        return (
-          '<figure class="temoignage" data-teinte="' + (temoignage.teinte || "indigo") + '">' +
-          '<span class="temoignage__guillemet">' + App.icon("bulle", { taille: 22 }) + "</span>" +
-          '<blockquote class="temoignage__texte">« ' + App.escape(temoignage.texte) + " »</blockquote>" +
-          '<figcaption class="temoignage__auteur">' +
-          '<span class="avatar">' + App.escape(temoignage.initiales || "?") + "</span>" +
-          "<div><strong>" + App.escape(temoignage.nom) + "</strong>" +
-          "<small>" + App.escape(temoignage.role) + "</small></div>" +
-          "</figcaption></figure>"
-        );
-      })
-      .join("");
+    window.addEventListener("scroll", majEntete, { passive: true });
+    majEntete();
   }
 
   App.onReady(function () {
     if (!window.APP_DATA) return;
     rendreChiffres();
+    rendreMatieres();
     rendreReprise();
     rendreNiveaux();
     rendreCours();
     rendreDocuments();
-    rendreTemoignages();
+    preparerEntete();
   });
 })();
