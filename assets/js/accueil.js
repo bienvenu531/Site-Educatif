@@ -29,25 +29,6 @@
       .join("");
   }
 
-  function rendreMatieres() {
-    var cible = App.qs("#accueil-matieres");
-    if (!cible || !window.APP_DATA) return;
-
-    cible.innerHTML = APP_DATA.matieres
-      .map(function (matiere) {
-        var nombre = APP_DATA.coursDeMatiere(matiere.id).length;
-        return (
-          '<a class="accueil-matiere" data-teinte="' + matiere.teinte + '" href="cours.html?matiere=' +
-          encodeURIComponent(matiere.id) + '">' +
-          '<span class="accueil-matiere__icone" aria-hidden="true">' + App.icon(matiere.icone, { taille: 16 }) + "</span>" +
-          "<span>" + App.escape(matiere.nom) + "</span>" +
-          '<span class="accueil-matiere__compte" aria-label="' + nombre + " cours\">" + nombre + "</span>" +
-          "</a>"
-        );
-      })
-      .join("");
-  }
-
   function rendreReprise() {
     var section = App.qs("#accueil-reprise");
     var cible = App.qs("#accueil-reprise-contenu");
@@ -98,12 +79,6 @@
     cible.innerHTML = APP_DATA.niveaux
       .map(function (niveau) {
         var progression = Store.progressionNiveau(niveau.id);
-        var listeMatieres = APP_DATA.matieresDuNiveau(niveau.id)
-          .slice(0, 4)
-          .map(function (matiere) {
-            return '<span class="etiquette etiquette--neutre">' + App.escape(matiere.nom) + "</span>";
-          })
-          .join("");
 
         return (
           '<article class="carte-niveau" data-teinte="' + niveau.teinte + '">' +
@@ -113,7 +88,6 @@
           '<span class="carte-niveau__detail">' + App.escape(niveau.detail) + " · " + App.escape(niveau.ages) + "</span></div>" +
           "</div>" +
           '<p class="petit texte-doux">' + App.escape(niveau.description) + "</p>" +
-          '<div class="rangee rangee--enroule" style="gap:6px">' + listeMatieres + "</div>" +
           '<div class="pile pile--serre mt-2">' +
           '<div class="jauge jauge--fine"><span class="jauge__remplissage" style="width:' + progression.pourcentage + '%"></span></div>' +
           '<div class="rangee rangee--entre"><span class="micro texte-faible">' +
@@ -183,7 +157,6 @@
           '<div class="accueil-doc__meta">' +
           "<span>" + App.escape(APP_DATA.niveau(document.niveau).nom) + "</span>" +
           "<span>" + App.nombre(document.pages) + " page" + (document.pages > 1 ? "s" : "") + "</span>" +
-          "<span>Mis à jour le " + App.date(document.maj) + "</span>" +
           "</div></a>"
         );
       })
@@ -205,7 +178,6 @@
   App.onReady(function () {
     if (!window.APP_DATA) return;
     rendreChiffres();
-    rendreMatieres();
     rendreReprise();
     rendreNiveaux();
     rendreCours();

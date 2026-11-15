@@ -595,83 +595,10 @@ body[data-page="accueil"] .accueil-cta :focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   Matières
-   -------------------------------------------------------------------------- */
-.accueil-matieres {
-  padding-block: clamp(30px, 4vw, 46px) 0;
-}
-
-.accueil-matieres__inner {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.accueil-matieres__entete {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.accueil-matieres__titre {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.45rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-}
-
-.accueil-matieres__liste {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.accueil-matiere {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 13px 8px 9px;
-  border: 1px solid color-mix(in srgb, var(--teinte) 22%, var(--c-bordure));
-  border-radius: var(--rayon-pilule);
-  background: color-mix(in srgb, var(--teinte-doux) 68%, var(--c-surface));
-  color: var(--c-texte);
-  font-size: 0.84rem;
-  font-weight: 600;
-  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
-}
-
-.accueil-matiere:hover {
-  color: var(--c-texte);
-  text-decoration: none;
-  transform: translateY(-2px);
-  border-color: var(--teinte);
-  box-shadow: 0 12px 24px -16px var(--teinte);
-}
-
-.accueil-matiere__icone {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--teinte) 16%, transparent);
-  color: var(--teinte);
-}
-
-.accueil-matiere__compte {
-  font-size: 0.68rem;
-  color: var(--c-texte-doux);
-  font-weight: 700;
-}
-
-/* --------------------------------------------------------------------------
    Sections : rythme et titres éditoriaux
    -------------------------------------------------------------------------- */
 body[data-page="accueil"] .section {
-  padding-block: clamp(64px, 7vw, 104px);
+  padding-block: clamp(56px, 6vw, 88px);
 }
 
 body[data-page="accueil"] .section__entete {
@@ -746,6 +673,13 @@ body[data-page="accueil"] .carte-niveau:hover {
   transform: translateY(-5px);
   border-color: color-mix(in srgb, var(--teinte) 42%, var(--c-bordure));
   box-shadow: 0 28px 52px -30px color-mix(in srgb, var(--teinte) 55%, transparent);
+}
+
+body[data-page="accueil"] .carte-niveau > p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 body[data-page="accueil"] .carte-niveau__icone {
@@ -836,48 +770,6 @@ body[data-page="accueil"] .accueil-outil .lien-fleche {
   color: var(--teinte);
 }
 
-/* Étapes */
-body[data-page="accueil"] .accueil-etapes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--c-bordure);
-}
-
-body[data-page="accueil"] .accueil-etape {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  padding: 32px 32px 0 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-body[data-page="accueil"] .accueil-etape + .accueil-etape {
-  padding-left: 32px;
-  border-left: 1px solid var(--c-bordure);
-}
-
-body[data-page="accueil"] .accueil-etape__numero {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  margin-bottom: 4px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4b52d6, #7c3aed);
-  color: #fff;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.1rem;
-  box-shadow: 0 14px 26px -14px rgba(75, 82, 214, 0.75);
-}
-
 /* Documents */
 body[data-page="accueil"] .accueil-documents {
   gap: 18px;
@@ -897,6 +789,13 @@ body[data-page="accueil"] .accueil-doc:hover {
   border-color: color-mix(in srgb, var(--teinte) 45%, var(--c-bordure));
   border-top-color: var(--teinte);
   box-shadow: 0 28px 50px -30px color-mix(in srgb, var(--teinte) 55%, transparent);
+}
+
+body[data-page="accueil"] .accueil-doc p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 /* Reprise */
@@ -1096,20 +995,6 @@ body[data-page="accueil"] .accueil-doc:hover {
   .chiffre:nth-child(3) {
     border-left: 0;
   }
-
-  body[data-page="accueil"] .accueil-etapes {
-    grid-template-columns: 1fr;
-  }
-
-  body[data-page="accueil"] .accueil-etape {
-    padding: 26px 0 0;
-  }
-
-  body[data-page="accueil"] .accueil-etape + .accueil-etape {
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid var(--c-bordure);
-  }
 }
 
 @media (max-width: 900px) {
@@ -1216,7 +1101,7 @@ body[data-page="accueil"] .accueil-doc:hover {
   }
 
   body[data-page="accueil"] .section {
-    padding-block: 56px;
+    padding-block: 48px;
   }
 
   body[data-page="accueil"] .section__entete {
@@ -1268,16 +1153,6 @@ body[data-page="accueil"] .accueil-doc:hover {
 
   .chiffre:nth-child(n + 3) {
     border-top: 1px solid var(--c-bordure);
-  }
-
-  .accueil-matiere {
-    font-size: 0.8rem;
-  }
-
-  .accueil-matieres__entete {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
   }
 }
 
